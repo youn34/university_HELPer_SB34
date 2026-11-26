@@ -1,0 +1,2243 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="UniHub 2.0" />
+  <title>UniHub 2.0 ✨ 馬卡龍大學生生活儀表板</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-cream: #FFFDF9;
+      --bg-card: #FFFFFF;
+      --text-main: #4A4453;
+      --text-sub: #8A8195;
+      --pink: #FFB5C2;
+      --pink-light: #FFF0F3;
+      --pink-dark: #E87A90;
+      --mint: #B5EAD7;
+      --mint-light: #EFFBF6;
+      --mint-dark: #45A282;
+      --blue: #BCE0FD;
+      --blue-light: #F0F8FF;
+      --blue-dark: #4A8FD1;
+      --lavender: #D8C7FF;
+      --lavender-light: #F6F2FF;
+      --lavender-dark: #7C5CC4;
+      --lemon: #FFE999;
+      --lemon-light: #FFFBEB;
+      --lemon-dark: #C2931B;
+      --peach: #FFCCB6;
+      --peach-light: #FFF4EF;
+      --border-soft: #F0EAEF;
+      --shadow-soft: 0 8px 24px rgba(149, 134, 168, 0.08);
+      --radius-lg: 22px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Nunito', 'Noto Sans TC', sans-serif;
+      background-color: var(--bg-cream);
+      background-image: radial-gradient(#F3EBF5 1px, transparent 1px);
+      background-size: 20px 20px;
+      color: var(--text-main);
+      padding-bottom: 60px;
+    }
+
+    /* Header & Top Bar */
+    .app-header {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 20px 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--pink), var(--lavender));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 12px rgba(255, 181, 194, 0.4);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .brand span {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      display: block;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.15s;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn-soft {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1.5px solid var(--border-soft);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .btn-pink { background: var(--pink); color: #5C2332; }
+    .btn-mint { background: var(--mint); color: #1E5743; }
+    .btn-blue { background: var(--blue); color: #1E4D78; }
+    .btn-lavender { background: var(--lavender); color: #3D2673; }
+    .btn-lemon { background: var(--lemon); color: #634906; }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Priority Sticky Notes (Only Urgent & Very Urgent) */
+    .sticky-board {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      box-shadow: var(--shadow-soft);
+      border: 1.5px solid var(--border-soft);
+      margin-bottom: 18px;
+    }
+
+    .sticky-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .sticky-title {
+      font-weight: 800;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sticky-form {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex: 1;
+      max-width: 600px;
+      justify-content: flex-end;
+    }
+
+    .input-pill, select.input-pill {
+      border: 1.5px solid var(--border-soft);
+      border-radius: var(--radius-sm);
+      padding: 7px 12px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: var(--text-main);
+      background: #FAF8FC;
+      outline: none;
+    }
+
+    .input-pill:focus {
+      border-color: var(--lavender-dark);
+      background: #FFF;
+    }
+
+    .sticky-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+
+    .sticky-col {
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+    }
+
+    .sticky-col.very-urgent {
+      background: var(--pink-light);
+      border: 1.5px dashed var(--pink);
+    }
+
+    .sticky-col.urgent {
+      background: var(--lemon-light);
+      border: 1.5px dashed var(--lemon-dark);
+    }
+
+    .sticky-col-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sticky-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .sticky-chip {
+      background: #FFF;
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+
+    .sticky-chip button {
+      border: none;
+      background: none;
+      color: var(--text-sub);
+      cursor: pointer;
+      font-size: 0.95rem;
+      padding: 0;
+      line-height: 1;
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+      scrollbar-width: none;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-soft);
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-sub);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--text-main);
+      color: #FFF;
+      border-color: var(--text-main);
+      box-shadow: 0 4px 12px rgba(74, 68, 83, 0.2);
+    }
+
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+    .tab-panel.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 4-Column Dynamic Course Grid (Max 20) */
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 1024px) {
+      .course-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .course-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .course-grid { grid-template-columns: 1fr; }
+    }
+
+    .course-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-soft);
+      border: 2px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      position: relative;
+      transition: transform 0.15s ease;
+    }
+
+    .course-card.today-glow {
+      border-color: var(--pink-dark);
+      box-shadow: 0 0 0 4px rgba(255, 181, 194, 0.35), var(--shadow-soft);
+    }
+
+    .today-badge {
+      position: absolute;
+      top: -10px;
+      right: 14px;
+      background: linear-gradient(135deg, var(--pink-dark), #F4978E);
+      color: #FFF;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 999px;
+      box-shadow: 0 3px 8px rgba(232, 122, 144, 0.35);
+    }
+
+    .course-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .course-color-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .course-name {
+      font-size: 1.08rem;
+      font-weight: 800;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .course-days {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      margin-top: 4px;
+    }
+
+    .hearts-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FAF8FC;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+    }
+
+    .hearts-list {
+      display: flex;
+      gap: 4px;
+      cursor: pointer;
+      font-size: 1.05rem;
+      user-select: none;
+    }
+
+    .course-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .link-chip {
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 7px 8px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .link-chip.disabled {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .add-course-card {
+      background: rgba(255, 255, 255, 0.6);
+      border: 2.5px dashed #D7CEE0;
+      border-radius: var(--radius-lg);
+      min-height: 190px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      color: var(--text-sub);
+      font-weight: 800;
+      transition: all 0.15s ease;
+    }
+
+    .add-course-card:hover {
+      background: #FFF;
+      border-color: var(--lavender-dark);
+      color: var(--lavender-dark);
+    }
+
+    /* Section Cards */
+    .section-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-soft);
+      border: 1.5px solid var(--border-soft);
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin: 0 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* Grade Calculator Blocks */
+    .grade-course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 16px;
+    }
+
+    .grade-block-row {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr 1.1fr 0.8fr auto;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 8px;
+      background: #FAF8FC;
+      padding: 6px 8px;
+      border-radius: var(--radius-sm);
+    }
+
+    .grade-block-row input, .grade-block-row select {
+      width: 100%;
+      padding: 5px 7px;
+      border: 1px solid #E2DAE8;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+    }
+
+    .grade-summary-box {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      background: var(--blue-light);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .weight-badge {
+      font-size: 0.78rem;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    /* Exam Prep & Past Exams */
+    .stamp-btn {
+      border: 1.5px solid #DDD4E6;
+      background: #F7F5F9;
+      color: var(--text-sub);
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .stamp-btn.has-q {
+      background: var(--blue-light);
+      border-color: var(--blue-dark);
+      color: var(--blue-dark);
+    }
+    .stamp-btn.has-a {
+      background: var(--mint-light);
+      border-color: var(--mint-dark);
+      color: var(--mint-dark);
+    }
+
+    /* Weather OOTD Spinner */
+    .weather-banner {
+      background: linear-gradient(135deg, var(--blue-light), var(--lavender-light));
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      border: 1.5px solid var(--blue);
+    }
+
+    .spinner-stage {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    .slot-box {
+      background: var(--lemon-light);
+      border: 2px solid var(--lemon);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      text-align: center;
+    }
+
+    .slot-label {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--lemon-dark);
+      margin-bottom: 6px;
+    }
+
+    .slot-result {
+      font-size: 1.25rem;
+      font-weight: 800;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wardrobe-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .cloth-capsule {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      background: #FAF8FC;
+      border: 1.5px solid var(--border-soft);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 6px;
+    }
+
+    .cloth-capsule.sleeping {
+      opacity: 0.45;
+      background: #F1EFF4;
+    }
+
+    .cloth-edit-input {
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-main);
+      width: 100%;
+      padding: 3px 5px;
+      border-radius: 6px;
+    }
+    .cloth-edit-input:focus {
+      background: #FFF;
+      outline: 1.5px solid var(--lavender-dark);
+    }
+
+    /* Life Room: Glass Jar, Pomodoro, Expense HP Bar */
+    .life-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+    }
+
+    .jar-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 12px 0;
+    }
+
+    .jar-lid {
+      width: 110px;
+      height: 18px;
+      background: linear-gradient(90deg, #F4C095, #E6A57E);
+      border-radius: 8px 8px 3px 3px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .jar-neck {
+      width: 96px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.85);
+      border-left: 3px solid #D3E4F0;
+      border-right: 3px solid #D3E4F0;
+    }
+
+    .glass-jar {
+      width: 180px;
+      height: 210px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(235,247,255,0.65));
+      border: 3.5px solid #C6DFEE;
+      border-radius: 26px 26px 38px 38px;
+      box-shadow: inset 8px 0 16px rgba(255,255,255,0.9), 0 10px 20px rgba(138, 175, 201, 0.18);
+      padding: 12px;
+      display: flex;
+      flex-wrap: wrap-reverse;
+      align-content: flex-start;
+      justify-content: center;
+      gap: 5px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .bead {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      box-shadow: inset -3px -3px 6px rgba(0,0,0,0.12), inset 3px 3px 5px rgba(255,255,255,0.85);
+      animation: popIn 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0); }
+      to { transform: scale(1); }
+    }
+
+    /* HP Bar */
+    .hp-bar-outer {
+      width: 100%;
+      height: 20px;
+      background: #EFEBF3;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0;
+      border: 1.5px solid #E0D8E8;
+    }
+
+    .hp-bar-inner {
+      height: 100%;
+      background: var(--mint-dark);
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    /* Pomodoro */
+    .timer-display {
+      font-size: 2.8rem;
+      font-weight: 800;
+      text-align: center;
+      margin: 10px 0;
+      letter-spacing: 2px;
+      color: var(--pink-dark);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(54, 47, 64, 0.45);
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 999;
+    }
+    .modal-backdrop.open { display: flex; }
+
+    .modal-card {
+      background: #FFF;
+      border-radius: var(--radius-lg);
+      max-width: 520px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 22px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="url"],
+    .form-group input[type="number"],
+    .form-group input[type="email"],
+    .form-group textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid var(--border-soft);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.92rem;
+    }
+
+    .day-checks {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .day-pill {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border-soft);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .day-pill.selected {
+      background: var(--lavender);
+      border-color: var(--lavender-dark);
+      color: #3D2673;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text-main);
+      color: #FFF;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      z-index: 1200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-logo">🧁</div>
+      <div>
+        <h1>UniHub 2.0</h1>
+        <span id="todayHeaderText">載入日期中...</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-soft" onclick="openProfileModal()">🪪 請假個資設定</button>
+      <button class="btn btn-lavender" onclick="openBackupModal()">🔄 同步 / 備份</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Priority Sticky Notes (Only Urgent & Very Urgent) -->
+    <section class="sticky-board">
+      <div class="sticky-header">
+        <div class="sticky-title">📌 突發任務置頂牆 <span style="font-size:0.78rem;font-weight:600;color:var(--text-sub)">（視覺降噪：只留急事）</span></div>
+        <div class="sticky-form">
+          <select id="stickyLevel" class="input-pill">
+            <option value="very-urgent">🔴 非常急（3天內）</option>
+            <option value="urgent">🟡 急（7天內）</option>
+          </select>
+          <input type="text" id="stickyInput" class="input-pill" placeholder="輸入停課通知、作業改期..." style="flex:1;min-width:160px;" onkeydown="if(event.key==='Enter') addStickyNote()" />
+          <button class="btn btn-pink" onclick="addStickyNote()">＋ 貼上</button>
+        </div>
+      </div>
+      <div class="sticky-grid">
+        <div class="sticky-col very-urgent">
+          <div class="sticky-col-title" style="color:var(--pink-dark)">🔴 非常急（3天內）</div>
+          <div class="sticky-list" id="veryUrgentList"></div>
+        </div>
+        <div class="sticky-col urgent">
+          <div class="sticky-col-title" style="color:var(--lemon-dark)">🟡 急（7天內）</div>
+          <div class="sticky-list" id="urgentList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('courses', this)">📚 課表牆 (<span id="courseCountBadge">0</span>/20)</button>
+      <button class="tab-btn" onclick="switchTab('grades', this)">🧮 積木成績精算</button>
+      <button class="tab-btn" onclick="switchTab('exam', this)">🎯 考前＆考古題庫</button>
+      <button class="tab-btn" onclick="switchTab('ootd', this)">👗 天氣 OOTD 衣櫃</button>
+      <button class="tab-btn" onclick="switchTab('life', this)">✨ 充電站＆小房間</button>
+    </nav>
+
+    <!-- TAB 1: Dynamic Course Grid (Max 20) -->
+    <section id="tab-courses" class="tab-panel active">
+      <div class="course-grid" id="courseGrid"></div>
+    </section>
+
+    <!-- TAB 2: Modular Grade Calculator (60-pt default baseline) -->
+    <section id="tab-grades" class="tab-panel">
+      <div class="section-card">
+        <div class="section-title">
+          <span>🧮 積木式成績精算機</span>
+          <span style="font-size:0.82rem;color:var(--text-sub);font-weight:600">💡 「未公布」項目自動先以 <strong>60 分保底</strong> 估算，不再出現期末要考 200 分！</span>
+        </div>
+        <div class="grade-course-grid" id="gradeCourseGrid"></div>
+      </div>
+    </section>
+
+    <!-- TAB 3: Exam Prep & Past Exam Collector -->
+    <section id="tab-exam" class="tab-panel">
+      <!-- Pending Upload Inbox -->
+      <div class="section-card" style="background: var(--peach-light); border-color: var(--peach);">
+        <div class="section-title">
+          <span>📥 考卷／講義待歸檔收件匣</span>
+          <div style="display:flex;gap:8px;flex:1;max-width:460px;">
+            <input type="text" id="pendingUploadInput" class="input-pill" placeholder="記一筆：例 微積分小考卷待掃描上傳..." style="flex:1;background:#FFF;" onkeydown="if(event.key==='Enter') addPendingUpload()" />
+            <button class="btn btn-pink" onclick="addPendingUpload()">記下來</button>
+          </div>
+        </div>
+        <div id="pendingUploadList" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+      </div>
+
+      <!-- Filtered Exam Courses -->
+      <div id="examCoursesContainer" class="grade-course-grid"></div>
+    </section>
+
+    <!-- TAB 4: Weather-Integrated & Inline-Editable OOTD -->
+    <section id="tab-ootd" class="tab-panel">
+      <div class="section-card">
+        <div class="weather-banner">
+          <div>
+            <div style="font-weight:800;font-size:1.05rem;" id="weatherSummary">🌤️ 正在讀取今日天氣...</div>
+            <div style="font-size:0.84rem;color:var(--text-sub);margin-top:3px;" id="weatherAdvice">依據氣溫自動決定是否加入「外搭外套」轉盤</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <select id="citySelect" class="input-pill" onchange="changeCity(this.value)">
+              <option value="25.08,121.47">新北市 / 台北市</option>
+              <option value="24.99,121.30">桃園市</option>
+              <option value="24.80,120.97">新竹市</option>
+              <option value="24.15,120.67">台中市</option>
+              <option value="23.00,120.21">台南市</option>
+              <option value="22.63,120.30">高雄市</option>
+            </select>
+            <label style="display:inline-flex;align-items:center;gap:6px;background:#FFF;padding:7px 12px;border-radius:10px;font-weight:800;font-size:0.86rem;cursor:pointer;border:1.5px solid var(--border-soft);">
+              <input type="checkbox" id="sportModeToggle" onchange="toggleSportMode(this.checked)" />
+              🏃‍♀️ 今日有體育課（隱藏裙裝）
+            </label>
+          </div>
+        </div>
+
+        <div style="text-align:center;">
+          <button class="btn btn-pink" style="font-size:1.05rem;padding:12px 28px;border-radius:999px;" onclick="spinOOTD()">🎲 抽取今日穿搭組合！</button>
+        </div>
+
+        <div class="spinner-stage" id="spinnerStage"></div>
+
+        <hr style="border:none;border-top:1.5px dashed var(--border-soft);margin:20px 0;" />
+        <div style="font-size:0.85rem;color:var(--text-sub);margin-bottom:8px;">✏️ <strong>直接點擊衣服文字就能修改名稱</strong>；點 👁️ 可讓洗衣服中的單品暫時休眠不參與抽籤。</div>
+        <div class="wardrobe-columns" id="wardrobeColumns"></div>
+      </div>
+    </section>
+
+    <!-- TAB 5: Self-Discipline & Daily Life Room -->
+    <section id="tab-life" class="tab-panel">
+      <div class="life-grid">
+        <!-- Glass Bead Jar -->
+        <div class="section-card" style="text-align:center;">
+          <div class="section-title" style="justify-content:center;">
+            <span>🫙 小禮物珠珠玻璃瓶</span>
+          </div>
+          <div style="display:flex;gap:6px;justify-content:center;align-items:center;margin-bottom:6px;flex-wrap:wrap;">
+            <span style="font-size:0.85rem;font-weight:700;">目標禮物：</span>
+            <input type="text" id="giftNameInput" class="input-pill" style="width:140px;padding:4px 8px;font-weight:700;" onchange="updateGiftSettings()" />
+            <span style="font-size:0.85rem;font-weight:700;">集滿</span>
+            <input type="number" id="giftTargetInput" class="input-pill" style="width:64px;padding:4px 8px;font-weight:700;" min="5" max="200" onchange="updateGiftSettings()" />
+            <span style="font-size:0.85rem;font-weight:700;">顆</span>
+          </div>
+          <div class="jar-wrapper">
+            <div class="jar-lid"></div>
+            <div class="jar-neck"></div>
+            <div class="glass-jar" id="glassJar"></div>
+          </div>
+          <div style="font-weight:800;font-size:1rem;margin:8px 0;" id="beadCountText">0 / 30 顆珠珠</div>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+            <button class="btn btn-lemon" onclick="addBeads(1, '🧋 忍住少喝一杯飲料 +1 珠！')">🧋 省一杯飲料 (+1)</button>
+            <button class="btn btn-pink" id="redeemGiftBtn" style="display:none;" onclick="redeemGift()">🎁 集滿啦！兌換禮物</button>
+          </div>
+          <div style="font-size:0.78rem;color:var(--text-sub);margin-top:8px;">完成番茄鐘 +2 珠 ｜ 記一筆帳 +1 珠</div>
+        </div>
+
+        <!-- 3-Second Expense Tracker & Custom Meal HP Bar -->
+        <div class="section-card">
+          <div class="section-title">
+            <span>🍱 3秒小記帳＆餐費血條</span>
+            <div style="display:flex;align-items:center;gap:5px;font-size:0.82rem;">
+              <span>今日滿血：</span>
+              <input type="number" id="mealBudgetInput" class="input-pill" style="width:78px;padding:4px 8px;font-weight:800;" min="50" step="10" onchange="updateMealBudget(this.value)" />
+              <span>元</span>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;font-size:0.85rem;font-weight:800;">
+            <span id="hpStatusText">剩餘 300 / 300 元</span>
+            <span id="hpPercentText">100%</span>
+          </div>
+          <div class="hp-bar-outer">
+            <div class="hp-bar-inner" id="hpBarInner" style="width:100%;"></div>
+          </div>
+
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin:12px 0;">
+            <button class="btn btn-mint" onclick="selectExpenseCat('🍱 三餐', this)">🍱 三餐</button>
+            <button class="btn btn-pink" onclick="selectExpenseCat('🧋 飲料零食', this)">🧋 飲料零食</button>
+            <button class="btn btn-blue" onclick="selectExpenseCat('🚌 交通', this)">🚌 交通</button>
+            <button class="btn btn-lavender" onclick="selectExpenseCat('📚 文具影印', this)">📚 文具</button>
+            <button class="btn btn-lemon" onclick="selectExpenseCat('🛍️ 快樂小物', this)">🛍️ 小物</button>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-bottom:12px;">
+            <span id="selectedCatBadge" style="background:#FAF8FC;padding:8px 10px;border-radius:10px;font-weight:800;font-size:0.85rem;white-space:nowrap;">🍱 三餐</span>
+            <input type="number" id="expenseAmountInput" class="input-pill" placeholder="金額" style="width:95px;" onkeydown="if(event.key==='Enter') addExpense()" />
+            <input type="text" id="expenseNoteInput" class="input-pill" placeholder="備註(選填)" style="flex:1;min-width:80px;" onkeydown="if(event.key==='Enter') addExpense()" />
+            <button class="btn btn-pink" onclick="addExpense()">記帳 +1珠</button>
+          </div>
+
+          <div style="font-size:0.82rem;font-weight:800;color:var(--text-sub);margin-bottom:6px;">今日消費紀錄：</div>
+          <div id="todayExpenseList" style="max-height:140px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+
+        <!-- Course-Linked Pomodoro -->
+        <div class="section-card">
+          <div class="section-title">
+            <span>🍅 科目專注番茄鐘</span>
+            <button class="btn btn-soft" id="rainNoiseBtn" onclick="toggleRainNoise()">🌧️ 雨聲白噪音：關</button>
+          </div>
+          <select id="pomoCourseSelect" class="input-pill" style="width:100%;margin-bottom:8px;font-weight:700;"></select>
+          <div class="timer-display" id="pomoTimerDisplay">25:00</div>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+            <button class="btn btn-pink" id="pomoStartBtn" onclick="togglePomodoro()">▶️ 開始專注</button>
+            <button class="btn btn-lemon" onclick="setPomoMinutes(5)">⚡ 5分鐘啟動魔法</button>
+            <button class="btn btn-soft" onclick="setPomoMinutes(25)">🔄 重設 25分</button>
+          </div>
+          <div id="pomoStatsSummary" style="margin-top:14px;font-size:0.84rem;background:#FAF8FC;padding:10px;border-radius:12px;"></div>
+        </div>
+
+        <!-- Hobby / 2nd Language Charging Station -->
+        <div class="section-card">
+          <div class="section-title">
+            <span>🌱 興趣與第二外語充電站</span>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
+            <input type="text" id="hobbyNameInput" class="input-pill" placeholder="例：日文單字 / Duolingo" style="flex:1;min-width:130px;" />
+            <input type="url" id="hobbyUrlInput" class="input-pill" placeholder="App/網頁連結(選填)" style="flex:1;min-width:130px;" />
+            <button class="btn btn-mint" onclick="addHobby()">＋ 新增</button>
+          </div>
+          <div id="hobbyList" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODAL: Add / Edit Course -->
+  <div class="modal-backdrop" id="courseModal">
+    <div class="modal-card">
+      <h3 style="margin-top:0;" id="courseModalTitle">✨ 新增課程</h3>
+      <input type="hidden" id="editCourseId" />
+      <div class="form-group">
+        <label>課程名稱</label>
+        <input type="text" id="courseNameInput" placeholder="例如：微積分、經濟學、體育" />
+      </div>
+      <div class="form-group">
+        <label>馬卡龍代表色</label>
+        <div style="display:flex;gap:10px;" id="colorPickerRow"></div>
+      </div>
+      <div class="form-group">
+        <label>上課星期（勾選後，當天會自動置頂發光）</label>
+        <div class="day-checks" id="dayChecksRow"></div>
+      </div>
+      <div class="form-group" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+        <div>
+          <label>可請假愛心上限</label>
+          <input type="number" id="courseMaxHeartsInput" min="1" max="10" value="3" style="width:80px;" />
+        </div>
+        <label style="display:flex;align-items:center;gap:6px;margin-top:18px;cursor:pointer;">
+          <input type="checkbox" id="courseNeedsReviewInput" checked />
+          📚 需要考前複習（關閉則不出現在考前分頁）
+        </label>
+      </div>
+      <div class="form-group">
+        <label>Apple「檔案」上課講義資料夾連結（選填）</label>
+        <input type="url" id="courseFilesUrlInput" placeholder="貼上 iCloud 資料夾分享連結" />
+      </div>
+      <div class="form-group">
+        <label>Apple「檔案」考古題庫資料夾連結（選填）</label>
+        <input type="url" id="coursePastExamUrlInput" placeholder="貼上歷屆考題資料夾連結" />
+      </div>
+      <div class="form-group">
+        <label>NotebookLM 專屬刷題連結（選填）</label>
+        <input type="url" id="courseNotebookUrlInput" placeholder="https://notebooklm.google.com/..." />
+      </div>
+      <div class="form-group">
+        <label>教授 / 助教請假收件 Email（選填，用於一鍵喚醒信箱）</label>
+        <input type="email" id="courseProfEmailInput" placeholder="prof@university.edu.tw" />
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:18px;">
+        <button class="btn btn-soft" id="deleteCourseBtn" style="color:var(--pink-dark);" onclick="deleteCurrentCourse()">🗑️ 刪除此課程</button>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-soft" onclick="closeModal('courseModal')">取消</button>
+          <button class="btn btn-pink" onclick="saveCourse()">儲存課程</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Universal Leave Request Generator -->
+  <div class="modal-backdrop" id="leaveModal">
+    <div class="modal-card">
+      <h3 style="margin-top:0;">✉️ 萬用課程請假信生成器</h3>
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+        <button class="btn btn-pink" onclick="generateLeaveText('sick')">🤒 病假／身體不適</button>
+        <button class="btn btn-lemon" onclick="generateLeaveText('personal')">📋 事假／公假</button>
+        <button class="btn btn-blue" onclick="generateLeaveText('english')">🌐 全英文授課版</button>
+      </div>
+      <div class="form-group">
+        <label>信件主旨</label>
+        <input type="text" id="leaveSubjectOutput" />
+      </div>
+      <div class="form-group">
+        <label>信件內文（可自由微調）</label>
+        <textarea id="leaveBodyOutput" rows="8"></textarea>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-soft" onclick="closeModal('leaveModal')">關閉</button>
+        <button class="btn btn-mint" onclick="copyLeaveEmail()">📋 一鍵複製全文</button>
+        <a id="mailtoLeaveLink" class="btn btn-blue" style="text-decoration:none;" href="#">📨 開啟郵件 App</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Student Profile for Leave Emails -->
+  <div class="modal-backdrop" id="profileModal">
+    <div class="modal-card">
+      <h3 style="margin-top:0;">🪪 請假信自動帶入個資</h3>
+      <p style="font-size:0.84rem;color:var(--text-sub);margin-top:0;">設定一次後，每次點請假都會自動幫你填好系級、學號與姓名（僅儲存在本機瀏覽器）。</p>
+      <div class="form-group">
+        <label>系級</label>
+        <input type="text" id="profDeptInput" placeholder="例如：企管一甲" />
+      </div>
+      <div class="form-group">
+        <label>學號</label>
+        <input type="text" id="profIdInput" placeholder="例如：411412345" />
+      </div>
+      <div class="form-group">
+        <label>姓名</label>
+        <input type="text" id="profNameInput" placeholder="例如：林小美" />
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;">
+        <button class="btn btn-soft" onclick="closeModal('profileModal')">取消</button>
+        <button class="btn btn-pink" onclick="saveProfile()">儲存設定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Backup & Sync -->
+  <div class="modal-backdrop" id="backupModal">
+    <div class="modal-card">
+      <h3 style="margin-top:0;">🔄 跨裝置同步與資料備份</h3>
+      <p style="font-size:0.84rem;color:var(--text-sub);margin-top:0;">支援匯出備份碼，也相容直接匯入 <strong>UniHub v1.0</strong> 的舊備份資料！</p>
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+        <button class="btn btn-lavender" onclick="copyBackupCode()">📋 複製全部備份碼</button>
+        <button class="btn btn-blue" onclick="downloadBackupFile()">💾 下載 JSON 備份檔</button>
+      </div>
+      <div class="form-group">
+        <label>貼上備份碼還原（或貼入 v1.0 舊備份）</label>
+        <textarea id="importBackupTextarea" rows="5" placeholder="在此貼上備份文字..."></textarea>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;">
+        <button class="btn btn-soft" onclick="closeModal('backupModal')">關閉</button>
+        <button class="btn btn-mint" onclick="importBackupCode()">📥 匯入並還原</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">已儲存</div>
+
+  <script>
+    const STORAGE_KEY = 'unihub_v2_data';
+    const MACARON_COLORS = ['#FFB5C2', '#B5EAD7', '#BCE0FD', '#D8C7FF', '#FFE999', '#FFCCB6'];
+    const DAY_NAMES = ['日', '一', '二', '三', '四', '五', '六'];
+
+    const DEFAULT_STATE = {
+      profile: { dept: '大一新生', studentId: '411400000', name: '同學' },
+      notes: [
+        { id: 'n1', level: 'very-urgent', text: '微積分小考範圍 Ch.1-2' },
+        { id: 'n2', level: 'urgent', text: '通識分組名單登記' }
+      ],
+      courses: [
+        {
+          id: 'c1', name: '微積分', color: '#FFB5C2', days: [1, 3], needsReview: true,
+          hearts: 3, maxHearts: 3, filesUrl: '', pastExamUrl: '', notebookUrl: '', profEmail: '',
+          grades: [
+            { id: 'g1', name: '一次段考', weight: 25, status: 'published', score: 78 },
+            { id: 'g2', name: '二次段考', weight: 25, status: 'pending', score: 0 },
+            { id: 'g3', name: '期末考', weight: 30, status: 'pending', score: 0 },
+            { id: 'g4', name: '平時作業', weight: 20, status: 'unannounced', score: 0 }
+          ],
+          chapters: [{ id: 'ch1', name: 'Ch.1 極限與連續', done: true }, { id: 'ch2', name: 'Ch.2 微分法則', done: false }],
+          pastExams: [{ id: 'pe1', term: '113 期中', hasQ: true, hasA: true }, { id: 'pe2', term: '112 期末', hasQ: true, hasA: false }],
+          groupMemo: ''
+        },
+        {
+          id: 'c2', name: '體育（羽球）', color: '#B5EAD7', days: [4], needsReview: false,
+          hearts: 3, maxHearts: 3, filesUrl: '', pastExamUrl: '', notebookUrl: '', profEmail: '',
+          grades: [
+            { id: 'g5', name: '出缺席與態度', weight: 50, status: 'unannounced', score: 0 },
+            { id: 'g6', name: '術科測驗', weight: 50, status: 'pending', score: 0 }
+          ],
+          chapters: [], pastExams: [], groupMemo: ''
+        }
+      ],
+      pendingUploads: [
+        { id: 'u1', text: '微積分第一次小考考卷拍照歸檔', done: false }
+      ],
+      ootd: {
+        city: '25.08,121.47',
+        sportMode: false,
+        tops: [
+          { id: 't1', text: '奶油白針織上衣', sleeping: false },
+          { id: 't2', text: '寶寶藍條紋襯衫', sleeping: false },
+          { id: 't3', text: '燕麥色大學T', sleeping: false }
+        ],
+        bottoms: [
+          { id: 'b1', text: '淺藍直筒牛仔褲', isSkirt: false, sleeping: false },
+          { id: 'b2', text: '奶茶色百褶長裙', isSkirt: true, sleeping: false },
+          { id: 'b3', text: '灰色棉質寬褲', isSkirt: false, sleeping: false }
+        ],
+        outerwear: [
+          { id: 'o1', text: '米白針織開襟衫', sleeping: false },
+          { id: 'o2', text: '卡其色短版風衣', sleeping: false }
+        ]
+      },
+      life: {
+        giftName: '無線藍牙鍵盤',
+        giftTarget: 30,
+        beads: 6,
+        mealBudget: 300,
+        expenses: [],
+        hobbies: [
+          { id: 'h1', name: '日文五十音＆單字', count: 14, url: 'https://www.duolingo.com' }
+        ],
+        pomodoros: {}
+      }
+    };
+
+    let state = loadState();
+    let currentLeaveCourse = null;
+    let currentWeather = { temp: 22, precip: 10 };
+    let selectedExpenseCategory = '🍱 三餐';
+    let pomoSeconds = 25 * 60;
+    let pomoInterval = null;
+    let audioCtx = null;
+    let rainNode = null;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
+        return migrateData(JSON.parse(raw));
+      } catch (e) {
+        return JSON.parse(JSON.stringify(DEFAULT_STATE));
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function migrateData(data) {
+      const merged = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      if (data.profile) merged.profile = { ...merged.profile, ...data.profile };
+      if (Array.isArray(data.notes)) {
+        merged.notes = data.notes.map(n => ({
+          id: n.id || uid(),
+          level: n.level === 'very-urgent' ? 'very-urgent' : 'urgent',
+          text: n.text || ''
+        }));
+      }
+      if (Array.isArray(data.courses)) {
+        merged.courses = data.courses.slice(0, 20).map((c, idx) => {
+          let grades = Array.isArray(c.grades) ? c.grades : [];
+          if (!grades.length && (c.midterm !== undefined || c.final !== undefined || c.regular !== undefined)) {
+            grades = [
+              { id: uid(), name: '期中考', weight: 30, status: c.midterm ? 'published' : 'pending', score: Number(c.midterm) || 0 },
+              { id: uid(), name: '期末考', weight: 40, status: c.final ? 'published' : 'pending', score: Number(c.final) || 0 },
+              { id: uid(), name: '平時成績', weight: 30, status: c.regular ? 'published' : 'unannounced', score: Number(c.regular) || 0 }
+            ];
+          }
+          return {
+            id: c.id || uid(),
+            name: c.name || '未命名課程',
+            color: c.color || MACARON_COLORS[idx % MACARON_COLORS.length],
+            days: Array.isArray(c.days) ? c.days : [],
+            needsReview: c.needsReview !== undefined ? c.needsReview : true,
+            hearts: c.hearts !== undefined ? c.hearts : 3,
+            maxHearts: c.maxHearts || 3,
+            filesUrl: c.filesUrl || '',
+            pastExamUrl: c.pastExamUrl || '',
+            notebookUrl: c.notebookUrl || '',
+            profEmail: c.profEmail || '',
+            grades,
+            chapters: Array.isArray(c.chapters) ? c.chapters : [],
+            pastExams: Array.isArray(c.pastExams) ? c.pastExams : [],
+            groupMemo: c.groupMemo || ''
+          };
+        });
+      }
+      if (Array.isArray(data.pendingUploads)) merged.pendingUploads = data.pendingUploads;
+      if (data.ootd) {
+        const normItems = (arr, withSkirt = false) => (arr || []).map(item =>
+          typeof item === 'string'
+            ? { id: uid(), text: item, ...(withSkirt ? { isSkirt: item.includes('裙') } : {}), sleeping: false }
+            : { id: item.id || uid(), text: item.text || '', ...(withSkirt ? { isSkirt: !!item.isSkirt } : {}), sleeping: !!item.sleeping }
+        );
+        merged.ootd = {
+          city: data.ootd.city || '25.08,121.47',
+          sportMode: !!data.ootd.sportMode,
+          tops: normItems(data.ootd.tops),
+          bottoms: normItems(data.ootd.bottoms, true),
+          outerwear: data.ootd.outerwear ? normItems(data.ootd.outerwear) : merged.ootd.outerwear
+        };
+      }
+      if (data.life) merged.life = { ...merged.life, ...data.life };
+      return merged;
+    }
+
+    function uid() {
+      return 'id_' + Math.random().toString(36).slice(2, 9);
+    }
+
+    function esc(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2200);
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + tabId).classList.add('active');
+      renderAll();
+    }
+
+    /* Sticky Notes */
+    function addStickyNote() {
+      const input = document.getElementById('stickyInput');
+      const level = document.getElementById('stickyLevel').value;
+      const text = input.value.trim();
+      if (!text) return;
+      state.notes.push({ id: uid(), level, text });
+      input.value = '';
+      saveState();
+      renderStickyNotes();
+    }
+
+    function removeStickyNote(id) {
+      state.notes = state.notes.filter(n => n.id !== id);
+      saveState();
+      renderStickyNotes();
+    }
+
+    function renderStickyNotes() {
+      const veryEl = document.getElementById('veryUrgentList');
+      const urgEl = document.getElementById('urgentList');
+      veryEl.innerHTML = '';
+      urgEl.innerHTML = '';
+      state.notes.forEach(n => {
+        const chip = document.createElement('div');
+        chip.className = 'sticky-chip';
+        chip.innerHTML = `<span>${esc(n.text)}</span><button onclick="removeStickyNote('${n.id}')">✕</button>`;
+        if (n.level === 'very-urgent') veryEl.appendChild(chip);
+        else urgEl.appendChild(chip);
+      });
+      if (!veryEl.children.length) veryEl.innerHTML = '<span style="font-size:0.8rem;color:var(--text-sub)">目前沒有3天內急件 🎉</span>';
+      if (!urgEl.children.length) urgEl.innerHTML = '<span style="font-size:0.8rem;color:var(--text-sub)">目前沒有7天內待辦 ✨</span>';
+    }
+
+    /* Courses (Dynamic up to 20, today auto-sorted to top) */
+    function renderCourses() {
+      const grid = document.getElementById('courseGrid');
+      const todayDay = new Date().getDay();
+      document.getElementById('courseCountBadge').textContent = state.courses.length;
+
+      const sorted = [...state.courses].sort((a, b) => {
+        const aToday = a.days.includes(todayDay) ? 1 : 0;
+        const bToday = b.days.includes(todayDay) ? 1 : 0;
+        return bToday - aToday;
+      });
+
+      grid.innerHTML = sorted.map(c => {
+        const isToday = c.days.includes(todayDay);
+        const daysStr = c.days.length ? '週' + c.days.map(d => DAY_NAMES[d]).join('、') : '未設星期';
+        let heartsHtml = '';
+        for (let i = 0; i < c.maxHearts; i++) {
+          heartsHtml += i < c.hearts ? '❤️' : '🤍';
+        }
+        const tomatoes = state.life.pomodoros[c.id] || 0;
+        return `
+          <div class="course-card ${isToday ? 'today-glow' : ''}">
+            ${isToday ? '<div class="today-badge">✨ 今日有課</div>' : ''}
+            <div>
+              <div class="course-top">
+                <div>
+                  <h3 class="course-name"><span class="course-color-dot" style="background:${c.color}"></span>${esc(c.name)}</h3>
+                  <div class="course-days">${daysStr} ${tomatoes > 0 ? `｜🍅×${tomatoes}` : ''}</div>
+                </div>
+                <button class="btn btn-soft" style="padding:4px 8px;font-size:0.78rem;" onclick="openCourseModal('${c.id}')">⚙️</button>
+              </div>
+            </div>
+
+            <div class="hearts-row">
+              <div class="hearts-list" title="點擊扣除或恢復請假愛心" onclick="toggleHeart('${c.id}')">${heartsHtml}</div>
+              <button class="btn btn-pink" style="padding:4px 9px;font-size:0.76rem;" onclick="openLeaveModal('${c.id}')">✉️ 請假信</button>
+            </div>
+
+            <div class="course-links">
+              <a class="link-chip btn-blue ${c.filesUrl ? '' : 'disabled'}" href="${esc(c.filesUrl)}" target="_blank">📁 講義檔案</a>
+              <a class="link-chip btn-lavender ${c.notebookUrl ? '' : 'disabled'}" href="${esc(c.notebookUrl)}" target="_blank">🧠 NotebookLM</a>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (state.courses.length < 20) {
+        grid.innerHTML += `
+          <div class="add-course-card" onclick="openCourseModal()">
+            <div style="font-size:1.8rem;">＋</div>
+            <div>新增課程（${state.courses.length}/20）</div>
+          </div>
+        `;
+      }
+    }
+
+    function toggleHeart(courseId) {
+      const c = state.courses.find(x => x.id === courseId);
+      if (!c) return;
+      if (c.hearts > 0) {
+        c.hearts--;
+        showToast(`${c.name} 扣掉1顆愛心（剩 ${c.hearts} 顆）`);
+      } else {
+        c.hearts = c.maxHearts;
+        showToast(`${c.name} 愛心已補滿！`);
+      }
+      saveState();
+      renderCourses();
+    }
+
+    /* Course Modal */
+    function openCourseModal(courseId = null) {
+      const modal = document.getElementById('courseModal');
+      const isEdit = !!courseId;
+      document.getElementById('courseModalTitle').textContent = isEdit ? '⚙️ 編輯課程設定' : '✨ 新增課程';
+      document.getElementById('deleteCourseBtn').style.display = isEdit ? 'inline-flex' : 'none';
+      document.getElementById('editCourseId').value = courseId || '';
+
+      const c = isEdit ? state.courses.find(x => x.id === courseId) : {
+        name: '', color: MACARON_COLORS[state.courses.length % MACARON_COLORS.length],
+        days: [], maxHearts: 3, needsReview: true, filesUrl: '', pastExamUrl: '', notebookUrl: '', profEmail: ''
+      };
+
+      document.getElementById('courseNameInput').value = c.name;
+      document.getElementById('courseMaxHeartsInput').value = c.maxHearts;
+      document.getElementById('courseNeedsReviewInput').checked = c.needsReview;
+      document.getElementById('courseFilesUrlInput').value = c.filesUrl;
+      document.getElementById('coursePastExamUrlInput').value = c.pastExamUrl;
+      document.getElementById('courseNotebookUrlInput').value = c.notebookUrl;
+      document.getElementById('courseProfEmailInput').value = c.profEmail;
+
+      // Color picker
+      const colorRow = document.getElementById('colorPickerRow');
+      colorRow.innerHTML = MACARON_COLORS.map(col => `
+        <div onclick="selectModalColor('${col}', this)" data-color="${col}"
+          style="width:28px;height:28px;border-radius:50%;background:${col};cursor:pointer;border:${c.color===col ? '3px solid #4A4453' : '2px solid transparent'};"></div>
+      `).join('');
+
+      // Day pills
+      const dayRow = document.getElementById('dayChecksRow');
+      dayRow.innerHTML = [1, 2, 3, 4, 5, 6, 0].map(d => `
+        <div class="day-pill ${c.days.includes(d) ? 'selected' : ''}" data-day="${d}" onclick="this.classList.toggle('selected')">週${DAY_NAMES[d]}</div>
+      `).join('');
+
+      modal.classList.add('open');
+    }
+
+    function selectModalColor(col, el) {
+      document.querySelectorAll('#colorPickerRow div').forEach(d => d.style.border = '2px solid transparent');
+      el.style.border = '3px solid #4A4453';
+    }
+
+    function saveCourse() {
+      const id = document.getElementById('editCourseId').value;
+      const name = document.getElementById('courseNameInput').value.trim();
+      if (!name) return showToast('請輸入課程名稱！');
+
+      const selectedColorEl = Array.from(document.querySelectorAll('#colorPickerRow div')).find(d => d.style.border.includes('3px'));
+      const color = selectedColorEl ? selectedColorEl.dataset.color : MACARON_COLORS[0];
+      const days = Array.from(document.querySelectorAll('#dayChecksRow .day-pill.selected')).map(el => Number(el.dataset.day));
+      const maxHearts = Math.max(1, Number(document.getElementById('courseMaxHeartsInput').value) || 3);
+      const needsReview = document.getElementById('courseNeedsReviewInput').checked;
+      const filesUrl = document.getElementById('courseFilesUrlInput').value.trim();
+      const pastExamUrl = document.getElementById('coursePastExamUrlInput').value.trim();
+      const notebookUrl = document.getElementById('courseNotebookUrlInput').value.trim();
+      const profEmail = document.getElementById('courseProfEmailInput').value.trim();
+
+      if (id) {
+        const c = state.courses.find(x => x.id === id);
+        Object.assign(c, { name, color, days, maxHearts, hearts: Math.min(c.hearts, maxHearts), needsReview, filesUrl, pastExamUrl, notebookUrl, profEmail });
+      } else {
+        if (state.courses.length >= 20) return showToast('已達 20 門課程上限！');
+        state.courses.push({
+          id: uid(), name, color, days, maxHearts, hearts: maxHearts, needsReview,
+          filesUrl, pastExamUrl, notebookUrl, profEmail,
+          grades: [
+            { id: uid(), name: '期中考', weight: 30, status: 'pending', score: 0 },
+            { id: uid(), name: '期末考', weight: 40, status: 'pending', score: 0 },
+            { id: uid(), name: '平時成績', weight: 30, status: 'unannounced', score: 0 }
+          ],
+          chapters: [], pastExams: [], groupMemo: ''
+        });
+      }
+      saveState();
+      closeModal('courseModal');
+      renderAll();
+      showToast('課程已儲存 ✨');
+    }
+
+    function deleteCurrentCourse() {
+      const id = document.getElementById('editCourseId').value;
+      if (!id) return;
+      state.courses = state.courses.filter(c => c.id !== id);
+      saveState();
+      closeModal('courseModal');
+      renderAll();
+      showToast('已刪除課程');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    /* Universal Leave Email Generator */
+    function openLeaveModal(courseId) {
+      currentLeaveCourse = state.courses.find(c => c.id === courseId);
+      if (!currentLeaveCourse) return;
+      generateLeaveText('sick');
+      document.getElementById('leaveModal').classList.add('open');
+    }
+
+    function generateLeaveText(type) {
+      if (!currentLeaveCourse) return;
+      const now = new Date();
+      const dateStr = `${now.getMonth() + 1}月${now.getDate()}日`;
+      const enDateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const { dept, studentId, name } = state.profile;
+      const cName = currentLeaveCourse.name;
+
+      let subj = '';
+      let body = '';
+      if (type === 'sick') {
+        subj = `【病假申請】${dateStr} ${cName} - ${dept} ${studentId} ${name}`;
+        body = `老師／助教 您好：\n\n我是修習貴門「${cName}」的學生 ${dept} ${studentId} ${name}。\n因今日身體不適需就醫休養，特此來信申請 ${dateStr} 課堂病假一次。\n\n課堂進度與筆記我會主動向同學借閱補齊，本週若有作業亦會按時繳交（後續如有就醫收據或證明可再行補上）。\n\n敬祝 教安\n學生 ${name} 敬上`;
+      } else if (type === 'personal') {
+        subj = `【請假申請】${dateStr} ${cName} - ${dept} ${studentId} ${name}`;
+        body = `老師／助教 您好：\n\n我是修習貴門「${cName}」的學生 ${dept} ${studentId} ${name}。\n因 ${dateStr} 另有要事／公假需處理，無法出席當日課程，特此提前來信向老師請假。\n\n相關課堂內容與作業我會自行補齊並準時繳交，感謝老師體諒！\n\n敬祝 教安\n學生 ${name} 敬上`;
+      } else {
+        subj = `[Absence Notice] ${enDateStr} ${cName} - ${name} (${studentId})`;
+        body = `Dear Professor / TA,\n\nI am ${name} (${dept}, Student ID: ${studentId}), a student in your "${cName}" class. I am writing to respectfully request an excused absence for the class on ${enDateStr} due to personal/health reasons.\n\nI will catch up on the lecture notes with my classmates and submit any assignments on time. Thank you very much for your understanding.\n\nBest regards,\n${name}`;
+      }
+
+      document.getElementById('leaveSubjectOutput').value = subj;
+      document.getElementById('leaveBodyOutput').value = body;
+      const mailto = `mailto:${encodeURIComponent(currentLeaveCourse.profEmail || '')}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+      document.getElementById('mailtoLeaveLink').href = mailto;
+    }
+
+    function copyLeaveEmail() {
+      const subj = document.getElementById('leaveSubjectOutput').value;
+      const body = document.getElementById('leaveBodyOutput').value;
+      navigator.clipboard.writeText(`主旨：${subj}\n\n${body}`);
+      showToast('已複製請假信主旨與內文 📋');
+    }
+
+    /* Profile Modal */
+    function openProfileModal() {
+      document.getElementById('profDeptInput').value = state.profile.dept;
+      document.getElementById('profIdInput').value = state.profile.studentId;
+      document.getElementById('profNameInput').value = state.profile.name;
+      document.getElementById('profileModal').classList.add('open');
+    }
+
+    function saveProfile() {
+      state.profile.dept = document.getElementById('profDeptInput').value.trim() || '學生';
+      state.profile.studentId = document.getElementById('profIdInput').value.trim() || '';
+      state.profile.name = document.getElementById('profNameInput').value.trim() || '';
+      saveState();
+      closeModal('profileModal');
+      showToast('請假個資已更新 🪪');
+    }
+
+    /* Modular Grade Calculator (Unannounced defaults to 60 baseline) */
+    function renderGrades() {
+      const container = document.getElementById('gradeCourseGrid');
+      if (!state.courses.length) {
+        container.innerHTML = '<p style="color:var(--text-sub)">請先在「課表牆」新增課程喔！</p>';
+        return;
+      }
+
+      container.innerHTML = state.courses.map(c => {
+        let totalWeight = 0;
+        let securedPts = 0;
+        let unannouncedPts = 0;
+        let pendingWeight = 0;
+
+        c.grades.forEach(g => {
+          const w = Number(g.weight) || 0;
+          totalWeight += w;
+          if (g.status === 'published') {
+            securedPts += (Number(g.score) || 0) * (w / 100);
+          } else if (g.status === 'unannounced') {
+            unannouncedPts += 60 * (w / 100);
+          } else {
+            pendingWeight += w;
+          }
+        });
+
+        const currentEst = securedPts + unannouncedPts;
+        let calcMsg = '';
+        if (pendingWeight > 0) {
+          const need60 = ((60 - currentEst) / (pendingWeight / 100));
+          const need85 = ((85 - currentEst) / (pendingWeight / 100));
+          const passText = need60 <= 0
+            ? '🎉 <strong>已穩過及格線（60分）！</strong>'
+            : need60 > 100
+              ? `🚨 即使剩餘項目拿滿分也差 ${(need60 - 100).toFixed(1)} 分（請確認平時預估或評估停修）`
+              : `🎯 剩餘 <strong>${pendingWeight}%</strong> 項目平均需考 <strong>${need60.toFixed(1)} 分</strong> 及格`;
+          const highText = need85 <= 100 && need85 > 0 ? `｜衝 85 分需平均 <strong>${need85.toFixed(1)} 分</strong>` : '';
+          calcMsg = `${passText}${highText}`;
+        } else {
+          calcMsg = `🏁 所有項目皆已結算／預估，學期預估總分：<strong>${currentEst.toFixed(1)} 分</strong>`;
+        }
+
+        const blocksHtml = c.grades.map(g => `
+          <div class="grade-block-row">
+            <input type="text" value="${esc(g.name)}" onchange="updateGradeBlock('${c.id}','${g.id}','name',this.value)" />
+            <input type="number" value="${g.weight}" min="0" max="100" title="權重%" onchange="updateGradeBlock('${c.id}','${g.id}','weight',this.value)" />
+            <select onchange="updateGradeBlock('${c.id}','${g.id}','status',this.value)">
+              <option value="published" ${g.status==='published'?'selected':''}>✅ 已公布</option>
+              <option value="unannounced" ${g.status==='unannounced'?'selected':''}>🔮 未公布(保底60)</option>
+              <option value="pending" ${g.status==='pending'?'selected':''}>⏳ 尚未考試</option>
+            </select>
+            ${g.status === 'published'
+              ? `<input type="number" value="${g.score}" min="0" max="150" placeholder="分數" onchange="updateGradeBlock('${c.id}','${g.id}','score',this.value)" />`
+              : `<span style="font-size:0.76rem;color:var(--text-sub);text-align:center;">${g.status==='unannounced'?'算 60分':'待計算'}</span>`
+            }
+            <button style="border:none;background:none;color:var(--text-sub);cursor:pointer;" onclick="removeGradeBlock('${c.id}','${g.id}')">✕</button>
+          </div>
+        `).join('');
+
+        return `
+          <div style="background:#FFF;border:1.5px solid var(--border-soft);border-radius:18px;padding:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <strong><span class="course-color-dot" style="background:${c.color}"></span>${esc(c.name)}</strong>
+              <span class="weight-badge" style="background:${totalWeight===100?'var(--mint)':'var(--lemon)'};">權重總和：${totalWeight}%</span>
+            </div>
+            ${blocksHtml}
+            <button class="btn btn-soft" style="width:100%;justify-content:center;margin-top:4px;font-size:0.8rem;" onclick="addGradeBlock('${c.id}')">＋ 新增評分積木（如三次段考/報告）</button>
+            <div class="grade-summary-box">
+              <div>已拿實分 <strong>${securedPts.toFixed(1)}</strong> ＋ 預估保底(60) <strong>${unannouncedPts.toFixed(1)}</strong> ＝ <strong>${currentEst.toFixed(1)} 分</strong></div>
+              <div style="margin-top:4px;">${calcMsg}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addGradeBlock(courseId) {
+      const c = state.courses.find(x => x.id === courseId);
+      if (!c) return;
+      c.grades.push({ id: uid(), name: '小考/報告', weight: 10, status: 'pending', score: 0 });
+      saveState();
+      renderGrades();
+    }
+
+    function updateGradeBlock(courseId, gradeId, key, val) {
+      const c = state.courses.find(x => x.id === courseId);
+      if (!c) return;
+      const g = c.grades.find(x => x.id === gradeId);
+      if (!g) return;
+      g[key] = (key === 'weight' || key === 'score') ? Number(val) : val;
+      saveState();
+      renderGrades();
+    }
+
+    function removeGradeBlock(courseId, gradeId) {
+      const c = state.courses.find(x => x.id === courseId);
+      if (!c) return;
+      c.grades = c.grades.filter(g => g.id !== gradeId);
+      saveState();
+      renderGrades();
+    }
+
+    /* Exam Prep & Past Exam Collector (Filters out needsReview === false) */
+    function addPendingUpload() {
+      const input = document.getElementById('pendingUploadInput');
+      const text = input.value.trim();
+      if (!text) return;
+      state.pendingUploads.push({ id: uid(), text, done: false });
+      input.value = '';
+      saveState();
+      renderExamTab();
+    }
+
+    function togglePendingUpload(id) {
+      state.pendingUploads = state.pendingUploads.filter(u => u.id !== id);
+      saveState();
+      renderExamTab();
+      showToast('已歸檔並移除提醒 ✅');
+    }
+
+    function renderExamTab() {
+      const upList = document.getElementById('pendingUploadList');
+      upList.innerHTML = state.pendingUploads.length
+        ? state.pendingUploads.map(u => `
+            <div class="sticky-chip" style="cursor:pointer;" onclick="togglePendingUpload('${u.id}')">
+              <span>⬜ ${esc(u.text)}</span>
+            </div>
+          `).join('')
+        : '<span style="font-size:0.84rem;color:var(--text-sub)">太棒了！目前沒有待上傳歸檔的考卷 ✨</span>';
+
+      const container = document.getElementById('examCoursesContainer');
+      const examCourses = state.courses.filter(c => c.needsReview);
+      if (!examCourses.length) {
+        container.innerHTML = '<div class="section-card">目前沒有勾選「需要考前複習」的科目（體育與免考通識已自動為你隱藏降噪 🌸）。</div>';
+        return;
+      }
+
+      container.innerHTML = examCourses.map(c => {
+        const peHtml = c.pastExams.map(pe => `
+          <div style="display:flex;align-items:center;justify-content:space-between;background:#FAF8FC;padding:6px 10px;border-radius:10px;margin-bottom:6px;">
+            <span style="font-weight:700;font-size:0.86rem;">${esc(pe.term)}</span>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <button class="stamp-btn ${pe.hasQ?'has-q':''}" onclick="togglePastExamFlag('${c.id}','${pe.id}','hasQ')">📄 題目</button>
+              <button class="stamp-btn ${pe.hasA?'has-a':''}" onclick="togglePastExamFlag('${c.id}','${pe.id}','hasA')">✍️ 解答</button>
+              <button style="border:none;background:none;color:var(--text-sub);cursor:pointer;" onclick="removePastExam('${c.id}','${pe.id}')">✕</button>
+            </div>
+          </div>
+        `).join('');
+
+        const chHtml = c.chapters.map(ch => `
+          <label style="display:inline-flex;align-items:center;gap:4px;background:${ch.done?'var(--mint-light)':'#FAF8FC'};border:1.5px solid ${ch.done?'var(--mint-dark)':'var(--border-soft)'};padding:4px 10px;border-radius:999px;font-size:0.8rem;font-weight:700;cursor:pointer;">
+            <input type="checkbox" ${ch.done?'checked':''} onchange="toggleChapter('${c.id}','${ch.id}')" />
+            ${esc(ch.name)}
+          </label>
+        `).join('');
+
+        return `
+          <div class="section-card" style="margin-bottom:0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <strong style="font-size:1.05rem;"><span class="course-color-dot" style="background:${c.color}"></span>${esc(c.name)}</strong>
+              <div style="display:flex;gap:6px;">
+                <a class="btn btn-soft ${c.pastExamUrl?'':'disabled'}" style="padding:4px 9px;font-size:0.78rem;text-decoration:none;" href="${esc(c.pastExamUrl)}" target="_blank">🗂️ 考古題庫</a>
+                <a class="btn btn-lavender ${c.notebookUrl?'':'disabled'}" style="padding:4px 9px;font-size:0.78rem;text-decoration:none;" href="${esc(c.notebookUrl)}" target="_blank">🧠 NotebookLM</a>
+              </div>
+            </div>
+
+            <div style="font-size:0.82rem;font-weight:800;margin-bottom:6px;">📚 考古題收集雙燈號：</div>
+            ${peHtml}
+            <div style="display:flex;gap:6px;margin-bottom:12px;">
+              <input type="text" id="peInput_${c.id}" class="input-pill" placeholder="新增年份 (如 113期中)" style="flex:1;padding:5px 9px;font-size:0.82rem;" onkeydown="if(event.key==='Enter') addPastExam('${c.id}')" />
+              <button class="btn btn-blue" style="padding:5px 10px;font-size:0.8rem;" onclick="addPastExam('${c.id}')">＋ 新增</button>
+            </div>
+
+            <div style="font-size:0.82rem;font-weight:800;margin-bottom:6px;">✅ 複習章節打勾：</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">${chHtml}</div>
+            <div style="display:flex;gap:6px;margin-bottom:12px;">
+              <input type="text" id="chInput_${c.id}" class="input-pill" placeholder="新增章節 (如 Ch.3)" style="flex:1;padding:5px 9px;font-size:0.82rem;" onkeydown="if(event.key==='Enter') addChapter('${c.id}')" />
+              <button class="btn btn-mint" style="padding:5px 10px;font-size:0.8rem;" onclick="addChapter('${c.id}')">＋ 章節</button>
+            </div>
+
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button class="btn btn-soft" style="font-size:0.76rem;" onclick="copyPrompt('quiz','${esc(c.name)}')">🎲 複製出題咒語</button>
+              <button class="btn btn-soft" style="font-size:0.76rem;" onclick="copyPrompt('solve','${esc(c.name)}')">✍️ 複製考古題詳解咒語</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addPastExam(courseId) {
+      const input = document.getElementById('peInput_' + courseId);
+      const term = input.value.trim();
+      if (!term) return;
+      const c = state.courses.find(x => x.id === courseId);
+      c.pastExams.push({ id: uid(), term, hasQ: true, hasA: false });
+      input.value = '';
+      saveState();
+      renderExamTab();
+    }
+
+    function togglePastExamFlag(courseId, peId, flag) {
+      const c = state.courses.find(x => x.id === courseId);
+      const pe = c.pastExams.find(x => x.id === peId);
+      pe[flag] = !pe[flag];
+      saveState();
+      renderExamTab();
+    }
+
+    function removePastExam(courseId, peId) {
+      const c = state.courses.find(x => x.id === courseId);
+      c.pastExams = c.pastExams.filter(x => x.id !== peId);
+      saveState();
+      renderExamTab();
+    }
+
+    function addChapter(courseId) {
+      const input = document.getElementById('chInput_' + courseId);
+      const name = input.value.trim();
+      if (!name) return;
+      const c = state.courses.find(x => x.id === courseId);
+      c.chapters.push({ id: uid(), name, done: false });
+      input.value = '';
+      saveState();
+      renderExamTab();
+    }
+
+    function toggleChapter(courseId, chId) {
+      const c = state.courses.find(x => x.id === courseId);
+      const ch = c.chapters.find(x => x.id === chId);
+      ch.done = !ch.done;
+      saveState();
+      renderExamTab();
+    }
+
+    function copyPrompt(type, courseName) {
+      const txt = type === 'quiz'
+        ? `請根據我上傳的「${courseName}」課程簡報與講義，幫我出 10 題最容易混淆的核心觀念選擇題（附詳細解析與對應章節），並在最後列出考前必背速查重點！`
+        : `這份是我收集到的「${courseName}」歷屆考古題，請完全依據老師上課簡報的定義與解法，逐題幫我寫出詳細解答步驟、標註常考陷阱，並告訴我這題對應講義的哪個觀念！`;
+      navigator.clipboard.writeText(txt);
+      showToast('已複製 NotebookLM 專屬咒語 🧠');
+    }
+
+    /* Weather-Integrated & Inline-Editable OOTD */
+    async function fetchWeather() {
+      const [lat, lon] = state.ootd.city.split(',');
+      try {
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,precipitation_probability&timezone=Asia%2FTaipei`);
+        const json = await res.json();
+        if (json.current) {
+          currentWeather.temp = json.current.temperature_2m;
+          currentWeather.precip = json.current.precipitation_probability || 0;
+        }
+      } catch (e) {
+        // Keep graceful default if offline
+      }
+      renderOOTD();
+    }
+
+    function changeCity(val) {
+      state.ootd.city = val;
+      saveState();
+      fetchWeather();
+    }
+
+    function toggleSportMode(checked) {
+      state.ootd.sportMode = checked;
+      saveState();
+      renderOOTD();
+    }
+
+    function renderOOTD() {
+      document.getElementById('citySelect').value = state.ootd.city;
+      document.getElementById('sportModeToggle').checked = state.ootd.sportMode;
+
+      const needOuter = currentWeather.temp <= 24;
+      const isRainy = currentWeather.precip >= 40;
+      document.getElementById('weatherSummary').textContent =
+        `🌡️ 目前氣溫 ${currentWeather.temp}°C ｜ 降雨機率 ${currentWeather.precip}% ${isRainy ? '🌧️ 記得帶傘、避開白鞋！' : '☀️ 天氣舒適'}`;
+      document.getElementById('weatherAdvice').textContent =
+        needOuter ? '🧥 氣溫微涼（≤24°C），已自動開啟「外搭外套」第三轉盤！' : '👕 氣溫溫暖（>24°C），清爽兩件式搭配即可出門！';
+
+      const stage = document.getElementById('spinnerStage');
+      stage.innerHTML = `
+        <div class="slot-box">
+          <div class="slot-label">👚 上半身</div>
+          <div class="slot-result" id="slotTop">點擊下方抽籤</div>
+        </div>
+        <div class="slot-box">
+          <div class="slot-label">👖 下半身 ${state.ootd.sportMode ? '(運動模式過濾裙裝)' : ''}</div>
+          <div class="slot-result" id="slotBottom">點擊下方抽籤</div>
+        </div>
+        ${needOuter ? `
+          <div class="slot-box" style="background:var(--lavender-light);border-color:var(--lavender);">
+            <div class="slot-label" style="color:var(--lavender-dark);">🧥 外搭外套（天氣連動）</div>
+            <div class="slot-result" id="slotOuter">點擊下方抽籤</div>
+          </div>
+        ` : ''}
+      `;
+
+      const cols = document.getElementById('wardrobeColumns');
+      cols.innerHTML = [
+        { key: 'tops', title: '👚 上半身衣櫃', hasSkirt: false },
+        { key: 'bottoms', title: '👖 下半身衣櫃', hasSkirt: true },
+        { key: 'outerwear', title: '🧥 外套衣櫃', hasSkirt: false }
+      ].map(cat => `
+        <div style="background:#FFF;border:1.5px solid var(--border-soft);border-radius:16px;padding:14px;">
+          <div style="font-weight:800;margin-bottom:8px;">${cat.title}</div>
+          <div style="display:flex;gap:6px;margin-bottom:10px;">
+            <input type="text" id="addCloth_${cat.key}" class="input-pill" placeholder="新增單品..." style="flex:1;padding:6px 10px;" onkeydown="if(event.key==='Enter') addClothItem('${cat.key}')" />
+            <button class="btn btn-lavender" style="padding:6px 12px;" onclick="addClothItem('${cat.key}')">＋</button>
+          </div>
+          <div>
+            ${state.ootd[cat.key].map(item => `
+              <div class="cloth-capsule ${item.sleeping ? 'sleeping' : ''}">
+                <input type="text" class="cloth-edit-input" value="${esc(item.text)}" onchange="editClothText('${cat.key}','${item.id}',this.value)" />
+                <div style="display:flex;gap:4px;align-items:center;flex-shrink:0;">
+                  ${cat.hasSkirt ? `<button class="stamp-btn ${item.isSkirt?'has-q':''}" title="標記為裙裝" onclick="toggleClothSkirt('${item.id}')">裙</button>` : ''}
+                  <button class="stamp-btn" title="${item.sleeping?'喚醒單品':'洗衣中休眠'}" onclick="toggleClothSleep('${cat.key}','${item.id}')">${item.sleeping?'💤':'👁️'}</button>
+                  <button style="border:none;background:none;color:var(--text-sub);cursor:pointer;" onclick="deleteClothItem('${cat.key}','${item.id}')">✕</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function spinOOTD() {
+      const tops = state.ootd.tops.filter(i => !i.sleeping);
+      const bottoms = state.ootd.bottoms.filter(i => !i.sleeping && (!state.ootd.sportMode || !i.isSkirt));
+      const outers = state.ootd.outerwear.filter(i => !i.sleeping);
+
+      const pick = arr => arr.length ? arr[Math.floor(Math.random() * arr.length)].text : '（衣櫃無可用單品）';
+      let ticks = 0;
+      const timer = setInterval(() => {
+        document.getElementById('slotTop').textContent = pick(tops);
+        document.getElementById('slotBottom').textContent = pick(bottoms);
+        const outerEl = document.getElementById('slotOuter');
+        if (outerEl) outerEl.textContent = pick(outers);
+        ticks++;
+        if (ticks >= 10) clearInterval(timer);
+      }, 60);
+    }
+
+    function addClothItem(catKey) {
+      const input = document.getElementById('addCloth_' + catKey);
+      const text = input.value.trim();
+      if (!text) return;
+      state.ootd[catKey].push({
+        id: uid(), text,
+        ...(catKey === 'bottoms' ? { isSkirt: text.includes('裙') } : {}),
+        sleeping: false
+      });
+      input.value = '';
+      saveState();
+      renderOOTD();
+    }
+
+    function editClothText(catKey, id, newText) {
+      const item = state.ootd[catKey].find(i => i.id === id);
+      if (item && newText.trim()) {
+        item.text = newText.trim();
+        saveState();
+        showToast('衣物名稱已更新 ✨');
+      }
+    }
+
+    function toggleClothSkirt(id) {
+      const item = state.ootd.bottoms.find(i => i.id === id);
+      if (item) item.isSkirt = !item.isSkirt;
+      saveState();
+      renderOOTD();
+    }
+
+    function toggleClothSleep(catKey, id) {
+      const item = state.ootd[catKey].find(i => i.id === id);
+      if (item) item.sleeping = !item.sleeping;
+      saveState();
+      renderOOTD();
+    }
+
+    function deleteClothItem(catKey, id) {
+      state.ootd[catKey] = state.ootd[catKey].filter(i => i.id !== id);
+      saveState();
+      renderOOTD();
+    }
+
+    /* Life Room: Glass Bead Jar, Expense HP Bar, Pomodoro, Hobbies */
+    function renderLifeRoom() {
+      // Glass Jar
+      document.getElementById('giftNameInput').value = state.life.giftName;
+      document.getElementById('giftTargetInput').value = state.life.giftTarget;
+      const jar = document.getElementById('glassJar');
+      const count = state.life.beads;
+      const target = Math.max(1, state.life.giftTarget);
+      let beadsHtml = '';
+      for (let i = 0; i < Math.min(count, 120); i++) {
+        beadsHtml += `<div class="bead" style="background:${MACARON_COLORS[i % MACARON_COLORS.length]};"></div>`;
+      }
+      jar.innerHTML = beadsHtml;
+      document.getElementById('beadCountText').textContent = `${count} / ${target} 顆珠珠（${state.life.giftName}）`;
+      document.getElementById('redeemGiftBtn').style.display = count >= target ? 'inline-flex' : 'none';
+
+      // Expense & Custom Meal HP Bar
+      document.getElementById('mealBudgetInput').value = state.life.mealBudget;
+      const todayKey = new Date().toISOString().slice(0, 10);
+      const todayExpenses = state.life.expenses.filter(e => e.date === todayKey);
+      const spent = todayExpenses.reduce((sum, e) => sum + e.amount, 0);
+      const maxHp = Math.max(1, state.life.mealBudget);
+      const remain = maxHp - spent;
+      const pct = Math.max(0, Math.min(100, (remain / maxHp) * 100));
+
+      document.getElementById('hpStatusText').textContent = remain >= 0 ? `今日剩餘 ${remain} / ${maxHp} 元` : `⚠️ 今日超支 ${Math.abs(remain)} 元！`;
+      document.getElementById('hpPercentText').textContent = `${Math.round(pct)}%`;
+      const bar = document.getElementById('hpBarInner');
+      bar.style.width = pct + '%';
+      bar.style.backgroundColor = pct > 50 ? 'var(--mint-dark)' : pct > 20 ? 'var(--lemon-dark)' : 'var(--pink-dark)';
+
+      const expList = document.getElementById('todayExpenseList');
+      expList.innerHTML = todayExpenses.length
+        ? todayExpenses.map(e => `
+            <div style="display:flex;justify-content:space-between;align-items:center;background:#FAF8FC;padding:6px 10px;border-radius:10px;font-size:0.84rem;">
+              <span><strong>${esc(e.cat)}</strong> ${e.note ? `(${esc(e.note)})` : ''}</span>
+              <div>
+                <strong>-${e.amount}元</strong>
+                <button style="border:none;background:none;color:var(--text-sub);cursor:pointer;margin-left:6px;" onclick="deleteExpense('${e.id}')">✕</button>
+              </div>
+            </div>
+          `).join('')
+        : '<span style="font-size:0.82rem;color:var(--text-sub)">今天還沒花錢，血條 100% 滿血中！</span>';
+
+      // Pomodoro Course Select & Stats
+      const sel = document.getElementById('pomoCourseSelect');
+      const prevVal = sel.value;
+      sel.innerHTML = `<option value="general">✨ 自由專注 / 課外學習</option>` +
+        state.courses.map(c => `<option value="${c.id}">📚 ${esc(c.name)}</option>`).join('');
+      if (prevVal) sel.value = prevVal;
+
+      const statsEntries = Object.entries(state.life.pomodoros).filter(([_, n]) => n > 0);
+      document.getElementById('pomoStatsSummary').innerHTML = statsEntries.length
+        ? '<strong>累計專注戰績：</strong>' + statsEntries.map(([cid, n]) => {
+            const cName = cid === 'general' ? '自由專注' : (state.courses.find(c => c.id === cid)?.name || '已刪除課程');
+            return `${esc(cName)} 🍅×${n}`;
+          }).join(' ｜ ')
+        : '完成一次專注計時，可獲得 <strong>+2 顆珠珠</strong> 投入玻璃瓶！';
+
+      // Hobbies
+      const hList = document.getElementById('hobbyList');
+      hList.innerHTML = state.life.hobbies.map(h => `
+        <div style="display:flex;justify-content:space-between;align-items:center;background:#FAF8FC;padding:9px 12px;border-radius:12px;gap:8px;">
+          <div>
+            <div style="font-weight:800;font-size:0.92rem;">${esc(h.name)}</div>
+            <div style="font-size:0.78rem;color:var(--mint-dark);font-weight:700;">已累積完成 ${h.count} 次打卡 🌟</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            ${h.url ? `<a class="btn btn-blue" style="padding:5px 9px;font-size:0.78rem;text-decoration:none;" href="${esc(h.url)}" target="_blank">🚀 開啟</a>` : ''}
+            <button class="btn btn-mint" style="padding:5px 10px;font-size:0.82rem;" onclick="incrementHobby('${h.id}')">＋1 打卡</button>
+            <button style="border:none;background:none;color:var(--text-sub);cursor:pointer;" onclick="deleteHobby('${h.id}')">✕</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateGiftSettings() {
+      state.life.giftName = document.getElementById('giftNameInput').value.trim() || '小禮物';
+      state.life.giftTarget = Math.max(1, Number(document.getElementById('giftTargetInput').value) || 30);
+      saveState();
+      renderLifeRoom();
+    }
+
+    function addBeads(num, msg) {
+      state.life.beads += num;
+      saveState();
+      renderLifeRoom();
+      if (msg) showToast(msg);
+    }
+
+    function redeemGift() {
+      state.life.beads = Math.max(0, state.life.beads - state.life.giftTarget);
+      saveState();
+      renderLifeRoom();
+      showToast(`🎉 恭喜兌換「${state.life.giftName}」！玻璃瓶已重置繼續集點～`);
+    }
+
+    function updateMealBudget(val) {
+      state.life.mealBudget = Math.max(10, Number(val) || 300);
+      saveState();
+      renderLifeRoom();
+    }
+
+    function selectExpenseCat(cat) {
+      selectedExpenseCategory = cat;
+      document.getElementById('selectedCatBadge').textContent = cat;
+    }
+
+    function addExpense() {
+      const amtInput = document.getElementById('expenseAmountInput');
+      const noteInput = document.getElementById('expenseNoteInput');
+      const amount = Number(amtInput.value);
+      if (!amount || amount <= 0) return showToast('請輸入金額！');
+      const todayKey = new Date().toISOString().slice(0, 10);
+      state.life.expenses.push({ id: uid(), date: todayKey, cat: selectedExpenseCategory, amount, note: noteInput.value.trim() });
+      amtInput.value = '';
+      noteInput.value = '';
+      addBeads(1, '記帳完成！玻璃瓶 +1 顆珠珠 🫙');
+    }
+
+    function deleteExpense(id) {
+      state.life.expenses = state.life.expenses.filter(e => e.id !== id);
+      saveState();
+      renderLifeRoom();
+    }
+
+    /* Pomodoro & Web Audio Rain Noise */
+    function setPomoMinutes(mins) {
+      clearInterval(pomoInterval);
+      pomoInterval = null;
+      document.getElementById('pomoStartBtn').textContent = '▶️ 開始專注';
+      pomoSeconds = mins * 60;
+      updatePomoDisplay();
+    }
+
+    function updatePomoDisplay() {
+      const m = String(Math.floor(pomoSeconds / 60)).padStart(2, '0');
+      const s = String(pomoSeconds % 60).padStart(2, '0');
+      document.getElementById('pomoTimerDisplay').textContent = `${m}:${s}`;
+    }
+
+    function togglePomodoro() {
+      const btn = document.getElementById('pomoStartBtn');
+      if (pomoInterval) {
+        clearInterval(pomoInterval);
+        pomoInterval = null;
+        btn.textContent = '▶️ 繼續專注';
+        return;
+      }
+      btn.textContent = '⏸️ 暫停';
+      pomoInterval = setInterval(() => {
+        pomoSeconds--;
+        updatePomoDisplay();
+        if (pomoSeconds <= 0) {
+          clearInterval(pomoInterval);
+          pomoInterval = null;
+          btn.textContent = '▶️ 開始專注';
+          const cid = document.getElementById('pomoCourseSelect').value;
+          state.life.pomodoros[cid] = (state.life.pomodoros[cid] || 0) + 1;
+          pomoSeconds = 25 * 60;
+          updatePomoDisplay();
+          playChime();
+          addBeads(2, '🍅 專注完成！獲得 +2 顆珠珠投入玻璃瓶！');
+          renderCourses();
+        }
+      }, 1000);
+    }
+
+    function playChime() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.8);
+      } catch (e) {}
+    }
+
+    function toggleRainNoise() {
+      const btn = document.getElementById('rainNoiseBtn');
+      if (rainNode) {
+        rainNode.disconnect();
+        rainNode = null;
+        btn.textContent = '🌧️ 雨聲白噪音：關';
+        return;
+      }
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const bufferSize = 2 * audioCtx.sampleRate;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        let lastOut = 0.0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          output[i] = (lastOut + (0.02 * white)) / 1.02;
+          lastOut = output[i];
+          output[i] *= 0.18;
+        }
+        const whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+        whiteNoise.loop = true;
+        whiteNoise.connect(audioCtx.destination);
+        whiteNoise.start(0);
+        rainNode = whiteNoise;
+        btn.textContent = '🌧️ 雨聲白噪音：開';
+      } catch (e) {
+        showToast('瀏覽器不支援音效播放');
+      }
+    }
+
+    function addHobby() {
+      const nameInput = document.getElementById('hobbyNameInput');
+      const urlInput = document.getElementById('hobbyUrlInput');
+      const name = nameInput.value.trim();
+      if (!name) return;
+      state.life.hobbies.push({ id: uid(), name, count: 0, url: urlInput.value.trim() });
+      nameInput.value = '';
+      urlInput.value = '';
+      saveState();
+      renderLifeRoom();
+    }
+
+    function incrementHobby(id) {
+      const h = state.life.hobbies.find(x => x.id === id);
+      if (h) h.count++;
+      saveState();
+      renderLifeRoom();
+      showToast(`${h.name} 打卡 +1 🌟`);
+    }
+
+    function deleteHobby(id) {
+      state.life.hobbies = state.life.hobbies.filter(h => h.id !== id);
+      saveState();
+      renderLifeRoom();
+    }
+
+    /* Backup & Sync (Compatible with v1.0 & v2.0) */
+    function openBackupModal() {
+      document.getElementById('importBackupTextarea').value = '';
+      document.getElementById('backupModal').classList.add('open');
+    }
+
+    function copyBackupCode() {
+      navigator.clipboard.writeText(JSON.stringify(state));
+      showToast('已複製 v2.0 完整備份碼 📋');
+    }
+
+    function downloadBackupFile() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `UniHub_v2_backup_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    }
+
+    function importBackupCode() {
+      const raw = document.getElementById('importBackupTextarea').value.trim();
+      if (!raw) return showToast('請先貼上備份碼！');
+      try {
+        const parsed = JSON.parse(raw);
+        state = migrateData(parsed);
+        saveState();
+        closeModal('backupModal');
+        renderAll();
+        showToast('備份資料已成功還原並升級為 v2.0 🎉');
+      } catch (e) {
+        showToast('備份格式錯誤，請確認有完整複製！');
+      }
+    }
+
+    function renderAll() {
+      const now = new Date();
+      document.getElementById('todayHeaderText').textContent =
+        `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日（週${DAY_NAMES[now.getDay()]}）`;
+      renderStickyNotes();
+      renderCourses();
+      renderGrades();
+      renderExamTab();
+      renderOOTD();
+      renderLifeRoom();
+    }
+
+    renderAll();
+    fetchWeather();
+  </script>
+</body>
+</html>
