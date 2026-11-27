@@ -992,7 +992,7 @@
     <!-- Priority Sticky Notes -->
     <section class="sticky-board">
       <div class="sticky-header">
-        <div class="sticky-title">📌 突發任務置頂牆 <span style="font-size:0.78rem;font-weight:700;color:var(--text-sub)">（視覺降噪：只留急事）</span></div>
+        <div class="sticky-title">📌 突發任務置頂牆 <span style="font-size:0.78rem;font-weight:700;color:var(--text-sub)">（輕鬆生活！只留急事！）</span></div>
         <div class="sticky-form">
           <select id="stickyLevel" class="input-pill">
             <option value="very-urgent">🔴 非常急（3天內）</option>
@@ -1280,11 +1280,11 @@
       </div>
       <div class="form-group">
         <label>學號</label>
-        <input type="text" id="profIdInput" placeholder="例如：411412345" />
+        <input type="text" id="profIdInput" placeholder="例如：A11512345" />
       </div>
       <div class="form-group">
         <label>姓名</label>
-        <input type="text" id="profNameInput" placeholder="例如：林小美" />
+        <input type="text" id="profNameInput" placeholder="例如：烏薩琪" />
       </div>
       <div style="display:flex;justify-content:flex-end;gap:8px;">
         <button class="btn btn-soft" onclick="closeModal('profileModal')">取消</button>
@@ -2014,7 +2014,7 @@
       const container = document.getElementById('examCoursesContainer');
       const examCourses = state.courses.filter(c => c.needsReview);
       if (!examCourses.length) {
-        container.innerHTML = '<div class="section-card">目前沒有勾選「需要考前複習」的科目（體育與免考通識已自動隱藏降噪 🌸）。</div>';
+        container.innerHTML = '<div class="section-card">目前沒有勾選「需要考前複習」的科目（體育與免考通識已自動隱藏 🌸）。</div>';
         return;
       }
 
@@ -2166,16 +2166,16 @@
       stage.innerHTML = `
         <div class="slot-box" style="background:var(--pink);">
           <div class="slot-label">👚 上半身</div>
-          <div class="slot-result" id="slotTop">點擊下方抽籤</div>
+          <div class="slot-result" id="slotTop">點擊上方抽籤</div>
         </div>
         <div class="slot-box" style="background:var(--mint);">
           <div class="slot-label">👖 下半身 ${state.ootd.sportMode ? '(運動模式過濾裙裝)' : ''}</div>
-          <div class="slot-result" id="slotBottom">點擊下方抽籤</div>
+          <div class="slot-result" id="slotBottom">點擊上方抽籤</div>
         </div>
         ${needOuter ? `
           <div class="slot-box" style="background:var(--lavender);">
             <div class="slot-label">🧥 外搭外套（天氣連動）</div>
-            <div class="slot-result" id="slotOuter">點擊下方抽籤</div>
+            <div class="slot-result" id="slotOuter">點擊上方抽籤</div>
           </div>
         ` : ''}
       `;
