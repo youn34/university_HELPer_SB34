@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="UniHub" />
-  <title>UniHub ✨ 馬卡龍大學生生活儀表板</title>
+  <title>UniHub ✨ 大學生活儀表板</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
@@ -1198,7 +1198,7 @@
       </div>
       <div class="form-group">
         <label>上課時間與教室（會顯示在卡片標題下方）</label>
-        <input type="text" id="courseScheduleInput" placeholder="例如：週四13:20 · TR209/週五09:10 · HHC-D401" />
+        <input type="text" id="courseScheduleInput" placeholder="例如：週四13:20 · TR209" />
       </div>
       <div class="form-group">
         <label>卡片馬卡龍底色</label>
@@ -1322,6 +1322,7 @@
       '#FFF0B3', // 奶油黃
       '#CBE8FF', // 寶寶藍
       '#C9F2DE', // 薄荷綠
+			'#78AAA7', // 湖水綠
       '#E5D9FF', // 薰衣草紫
       '#FFE0CC', // 蜜桃橘
       '#FAD4EC', // 櫻花粉
@@ -1587,7 +1588,7 @@
         if (need85 <= 0) {
           sprintLine = `🏆 衝刺線：太強了！已跨越總成績 <strong>A (85分)</strong> 門檻！`;
         } else if (need85 > 100) {
-          sprintLine = `🏆 衝刺線：距離總成績 A (85分) 還差 ${(85 - currentEst).toFixed(1)} 分（剩餘滿分也暫無法達標）。`;
+          sprintLine = `🏆 衝刺線：距離總成績 A (85分) 還差 ${(85 - currentEst).toFixed(1)} 分（再加加油！）。`;
         } else {
           sprintLine = `🏆 衝刺線：距離總成績 A (85分) 還差 ${(85 - currentEst).toFixed(1)} 分（剩餘需平均考 <strong>${Math.ceil(need85)} 分</strong> 以上）。`;
         }
@@ -1805,10 +1806,10 @@
       let body = '';
       if (type === 'sick') {
         subj = `【病假申請】${dateStr} ${cName} - ${dept} ${studentId} ${name}`;
-        body = `老師／助教 您好：\n\n我是修習貴門「${cName}」的學生 ${dept} ${studentId} ${name}。\n因今日身體不適需就醫休養，特此來信申請 ${dateStr} 課堂病假一次。\n\n課堂進度與筆記我會主動向同學借閱補齊，本週若有作業亦會按時繳交（後續如有就醫收據或證明可再行補上）。\n\n敬祝 教安\n學生 ${name} 敬上`;
+        body = `老師／助教 您好：\n\n我是修習「${cName}」的學生 ${dept} ${studentId} ${name}。\n因今日身體不適需就醫休養，特此來信申請 ${dateStr} 課堂病假一次。\n\n課堂進度與筆記我會主動向同學借閱補齊，本週若有作業亦會按時繳交（後續如有就醫收據或證明可再行補上）。\n\n敬祝 教安\n學生 ${name} 敬上`;
       } else if (type === 'personal') {
         subj = `【請假申請】${dateStr} ${cName} - ${dept} ${studentId} ${name}`;
-        body = `老師／助教 您好：\n\n我是修習貴門「${cName}」的學生 ${dept} ${studentId} ${name}。\n因 ${dateStr} 另有要事／公假需處理，無法出席當日課程，特此提前來信向老師請假。\n\n相關課堂內容與作業我會自行補齊並準時繳交，感謝老師體諒！\n\n敬祝 教安\n學生 ${name} 敬上`;
+        body = `老師／助教 您好：\n\n我是修習「${cName}」的學生 ${dept} ${studentId} ${name}。\n因 ${dateStr} 另有要事／公假需處理，無法出席當日課程，特此提前來信向老師請假。\n\n相關課堂內容與作業我會自行補齊並準時繳交，感謝老師體諒！\n\n敬祝 教安\n學生 ${name} 敬上`;
       } else {
         subj = `[Absence Notice] ${enDateStr} ${cName} - ${name} (${studentId})`;
         body = `Dear Professor / TA,\n\nI am ${name} (${dept}, Student ID: ${studentId}), a student in your "${cName}" class. I am writing to respectfully request an excused absence for the class on ${enDateStr} due to personal/health reasons.\n\nI will catch up on the lecture notes with my classmates and submit any assignments on time. Thank you very much for your understanding.\n\nBest regards,\n${name}`;
