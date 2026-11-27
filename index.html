@@ -1322,7 +1322,11 @@
       '#FFF0B3', // 奶油黃
       '#CBE8FF', // 寶寶藍
       '#C9F2DE', // 薄荷綠
-			'#78AAA7', // 湖水綠
+	  '#B3CCFF', // 霧霾藍
+	  'FF3CCFF', // 萌萌粉
+	  'FFFFF7', // 米白
+	  'B3CAD8', // 好看藍
+	  'F2DBD5', // 淡粉橘
       '#E5D9FF', // 薰衣草紫
       '#FFE0CC', // 蜜桃橘
       '#FAD4EC', // 櫻花粉
@@ -1331,14 +1335,14 @@
     const DAY_NAMES = ['日', '一', '二', '三', '四', '五', '六'];
 
     const DEFAULT_STATE = {
-      profile: { dept: '大一新生', studentId: '411400000', name: '同學' },
+      profile: { dept: '大一新生', studentId: 'A123456789', name: '同學' },
       notes: [
         { id: 'n1', level: 'very-urgent', text: '微積分小考範圍 Ch.1-2' },
         { id: 'n2', level: 'urgent', text: '通識分組名單登記' }
       ],
       courses: [
         {
-          id: 'c1', name: '微積分', schedule: '週四13:20 · TR209/週五09:10 · HHC-D401',
+          id: 'c1', name: '微積分', schedule: '週四13:20 · TR209',
           color: '#FFD6E0', days: [4, 5], needsReview: true,
           hearts: 2, maxHearts: 3, filesUrl: '', pastExamUrl: '', notebookUrl: '', profEmail: '',
           grades: [
