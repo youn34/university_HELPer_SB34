@@ -1232,13 +1232,17 @@
         <input type="url" id="courseFilesUrlInput" placeholder="貼上 iCloud 資料夾分享連結" />
       </div>
       <div class="form-group">
-        <label>Apple「檔案」考古題庫資料夾連結（選填）</label>
-        <input type="url" id="coursePastExamUrlInput" placeholder="貼上歷屆考題資料夾連結" />
-      </div>
-      <div class="form-group">
-        <label>NotebookLM 專屬刷題連結（選填）</label>
-        <input type="url" id="courseNotebookUrlInput" placeholder="https://notebooklm.google.com/..." />
-      </div>
+      <label>Apple「檔案」考古題庫資料夾連結（選填）</label>
+      <input type="url" id="coursePastExamUrlInput" placeholder="貼上歷屆考題資料夾連結" />
+    </div>
+    <div class="form-group">
+      <label>🌐 Moodle 課程專屬連結（選填）</label>
+      <input type="url" id="courseMoodleUrlInput" placeholder="貼上這門課在 Moodle 的網址" />
+    </div>
+    <div class="form-group">
+      <label>NotebookLM 專屬刷題連結（選填）</label>
+      <input type="url" id="courseNotebookUrlInput" placeholder="https://notebooklm.google.com/..." />
+    </div>
       <div class="form-group">
         <label>教授 / 助教請假收件 Email（選填）</label>
         <input type="email" id="courseProfEmailInput" placeholder="prof@university.edu.tw" />
@@ -1475,6 +1479,7 @@
             maxHearts: c.maxHearts || 3,
             filesUrl: c.filesUrl || '',
             pastExamUrl: c.pastExamUrl || '',
+			moodleUrl: c.moodleUrl || '',
             notebookUrl: c.notebookUrl || '',
             profEmail: c.profEmail || '',
             grades,
@@ -1665,24 +1670,21 @@
               <button class="edit-circle-btn" title="編輯課程" onclick="openCourseModal('${c.id}')">✏️</button>
             </div>
 
-            <div style="display:flex;flex-direction:column;gap:8px;">
-              <div class="white-pill-bar">
-                <div style="display:flex;align-items:center;gap:6px;">
-                  <span>請假扣打</span>
-                  <button class="mini-leave-btn" onclick="openLeaveModal('${c.id}')">✉️ 請假</button>
-                </div>
-                <div class="hearts-list" title="點擊扣除或補滿愛心" onclick="toggleHeart('${c.id}')">${heartsHtml}</div>
-              </div>
-
-              <div class="white-pill-bar" style="cursor:pointer;" onclick="switchTab('grades', document.querySelectorAll('.tab-btn')[1])">
-                <span>${gradeInfo.pillText}</span>
-              </div>
+           <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="white-pill-bar">
+              <span style="white-space:nowrap;">請假扣打</span>
+              <div class="hearts-list" title="點擊扣除或補滿愛心" onclick="toggleHeart('${c.id}')">${heartsHtml}</div>
             </div>
 
-            <div class="course-links">
-              <a class="card-action-btn files-btn ${c.filesUrl ? '' : 'disabled'}" href="${esc(c.filesUrl)}" target="_blank">📁 Apple 檔案</a>
-              <a class="card-action-btn nb-btn ${c.notebookUrl ? '' : 'disabled'}" href="${esc(c.notebookUrl)}" target="_blank">🧠 NotebookLM</a>
+            <div class="white-pill-bar" style="cursor:pointer;" onclick="switchTab('grades', document.querySelectorAll('.tab-btn')[1])">
+              <span>${gradeInfo.pillText}</span>
             </div>
+          </div>
+
+          <div class="course-links">
+            <a class="card-action-btn files-btn ${c.filesUrl ? '' : 'disabled'}" href="${esc(c.filesUrl)}" target="_blank">📁 Apple 檔案</a>
+            <button class="card-action-btn nb-btn" onclick="openLeaveModal('${c.id}')">✉️ 請假信</button>
+          </div>
           </div>
         `;
       }).join('');
@@ -1731,6 +1733,7 @@
       document.getElementById('courseNeedsReviewInput').checked = c.needsReview;
       document.getElementById('courseFilesUrlInput').value = c.filesUrl;
       document.getElementById('coursePastExamUrlInput').value = c.pastExamUrl;
+	  document.getElementById('courseMoodleUrlInput').value = c.moodleUrl || '';
       document.getElementById('courseNotebookUrlInput').value = c.notebookUrl;
       document.getElementById('courseProfEmailInput').value = c.profEmail;
 
@@ -1772,17 +1775,18 @@
       const needsReview = document.getElementById('courseNeedsReviewInput').checked;
       const filesUrl = document.getElementById('courseFilesUrlInput').value.trim();
       const pastExamUrl = document.getElementById('coursePastExamUrlInput').value.trim();
+	  const moodleUrl = document.getElementById('courseMoodleUrlInput').value.trim();
       const notebookUrl = document.getElementById('courseNotebookUrlInput').value.trim();
       const profEmail = document.getElementById('courseProfEmailInput').value.trim();
 
       if (id) {
         const c = state.courses.find(x => x.id === id);
-        Object.assign(c, { name, schedule, color, days, maxHearts, hearts: Math.min(c.hearts, maxHearts), needsReview, filesUrl, pastExamUrl, notebookUrl, profEmail });
+        Object.assign(c, { name, schedule, color, days, maxHearts, hearts: Math.min(c.hearts, maxHearts), needsReview, filesUrl, pastExamUrl, moodleUrl, notebookUrl, profEmail });
       } else {
         if (state.courses.length >= 20) return showToast('已達 20 門課程上限！');
         state.courses.push({
           id: uid(), name, schedule, color, days, maxHearts, hearts: maxHearts, needsReview,
-          filesUrl, pastExamUrl, notebookUrl, profEmail,
+          filesUrl, pastExamUrl, moodleUrl, notebookUrl, profEmail,
           grades: [
             { id: uid(), name: '期中考', weight: 30, status: 'pending', score: 0 },
             { id: uid(), name: '期末考', weight: 30, status: 'pending', score: 0 },
@@ -2060,11 +2064,13 @@
         return `
           <div class="grade-card-v1" style="background:${c.color};">
             <div style="display:flex;justify-content:space-between;align-items:center;">
-              <strong style="font-size:1.15rem;">${esc(c.name)}</strong>
-              <div style="display:flex;gap:6px;">
-                <a class="btn btn-soft ${c.pastExamUrl?'':'disabled'}" style="padding:4px 10px;font-size:0.78rem;text-decoration:none;" href="${esc(c.pastExamUrl)}" target="_blank">🗂️ 考古題庫</a>
-                <a class="btn btn-dark ${c.notebookUrl?'':'disabled'}" style="padding:4px 10px;font-size:0.78rem;text-decoration:none;" href="${esc(c.notebookUrl)}" target="_blank">🧠 NotebookLM</a>
-              </div>
+            <strong style="font-size:1.2rem;">${esc(c.name)}</strong>
+            <a class="btn btn-soft ${c.pastExamUrl?'':'disabled'}" style="padding:5px 11px;font-size:0.8rem;text-decoration:none;" href="${esc(c.pastExamUrl)}" target="_blank">🗂️ 考古題庫</a>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <a class="btn btn-blue ${c.moodleUrl?'':'disabled'}" style="justify-content:center;padding:10px 8px;font-size:0.9rem;text-decoration:none;" href="${esc(c.moodleUrl)}" target="_blank">🌐 Moodle</a>
+            <a class="btn btn-dark ${c.notebookUrl?'':'disabled'}" style="justify-content:center;padding:10px 8px;font-size:0.9rem;text-decoration:none;" href="${esc(c.notebookUrl)}" target="_blank">🧠 NotebookLM</a>
+          </div>
             </div>
 
             <div class="grade-inner-box">
