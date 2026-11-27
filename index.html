@@ -1589,10 +1589,11 @@
           safetyLine = `安全線：距離及格 (60分) 還差 ${(60 - currentEst).toFixed(1)} 分（剩餘 ${pendingWeight}% 需平均考 <strong>${Math.ceil(need60)} 分</strong> 以上）。`;
         }
 
-        if (need85 <= 0) {
+                if (need85 <= 0) {
           sprintLine = `🏆 衝刺線：太強了！已跨越總成績 <strong>A (85分)</strong> 門檻！`;
         } else if (need85 > 100) {
-          sprintLine = `🏆 衝刺線：距離總成績 A (85分) 還差 ${(85 - currentEst).toFixed(1)} 分（再加加油！）。`;
+          const maxPossible = (currentEst + pendingWeight).toFixed(1);
+          sprintLine = `🏆 衝刺線：距離總成績 A (85分) 還差 ${(85 - currentEst).toFixed(1)} 分（若剩餘全拿滿分，總成績最高可達 <strong>${maxPossible} 分</strong>）。`;
         } else {
           sprintLine = `🏆 衝刺線：距離總成績 A (85分) 還差 ${(85 - currentEst).toFixed(1)} 分（剩餘需平均考 <strong>${Math.ceil(need85)} 分</strong> 以上）。`;
         }
