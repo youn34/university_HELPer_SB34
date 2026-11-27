@@ -2150,75 +2150,134 @@
       fetchWeather();
     }
 
-    function toggleSportMode(checked) {
-      state.ootd.sportMode = checked;
+        let userOverrodeBottom = false;
+
+    function setTopSeason(season) {
+      state.ootd.topSeason = season;
+      saveState();
+      renderOOTD();
+    }
+
+    function setBottomType(type) {
+      userOverrodeBottom = true;
+      state.ootd.bottomType = type;
       saveState();
       renderOOTD();
     }
 
     function renderOOTD() {
       document.getElementById('citySelect').value = state.ootd.city;
-      document.getElementById('sportModeToggle').checked = state.ootd.sportMode;
+
+      // 自動偵測今天課表是否有體育/球類課程
+      const todayDay = new Date().getDay();
+      const peCourse = state.courses.find(c =>
+        c.days.includes(todayDay) && /體育|排球|羽球|籃球|網球|桌球|游泳|體適能/.test(c.name)
+      );
+      if (peCourse && !userOverrodeBottom) {
+        state.ootd.bottomType = 'pants';
+      }
 
       const needOuter = currentWeather.temp <= 24;
       const isRainy = currentWeather.precip >= 40;
+      const curSeason = state.ootd.topSeason || 'winter';
+      const curBottom = state.ootd.bottomType || 'pants';
+
       document.getElementById('weatherSummary').textContent =
         `🌡️ 目前氣溫 ${currentWeather.temp}°C ｜ 降雨機率 ${currentWeather.precip}% ${isRainy ? '🌧️ 記得帶傘、避開白鞋！' : '☀️ 天氣舒適'}`;
-      document.getElementById('weatherAdvice').textContent =
-        needOuter ? '🧥 氣溫微涼（≤24°C），已自動開啟「外搭外套」第三轉盤！' : '👕 氣溫溫暖（>24°C），清爽兩件式搭配即可出門！';
+      document.getElementById('weatherAdvice').innerHTML = peCourse
+        ? `💡 <strong>小提醒！今天有體育課（${esc(peCourse.name)}）～～建議穿褲裝喔！</strong>（若停課可隨時切回裙裝）`
+        : (needOuter ? '🧥 氣溫微涼（≤24°C），已自動開啟「外搭外套」第三轉盤！' : '👕 氣溫溫暖（>24°C），清爽兩件式搭配即可出門！');
 
       const stage = document.getElementById('spinnerStage');
       stage.innerHTML = `
         <div class="slot-box" style="background:var(--pink);">
-          <div class="slot-label">👚 上半身</div>
-          <div class="slot-result" id="slotTop">點擊上方抽籤</div>
+          <div class="slot-label" style="display:flex;justify-content:center;align-items:center;gap:6px;">
+            <span>👚 上半身</span>
+            <button class="stamp-btn" style="background:${curSeason==='winter'?'var(--ink)':'var(--white)'};color:${curSeason==='winter'?'var(--white)':'var(--ink)'};" onclick="setTopSeason('winter')">❄️ 冬</button>
+            <button class="stamp-btn" style="background:${curSeason==='summer'?'var(--ink)':'var(--white)'};color:${curSeason==='summer'?'var(--white)':'var(--ink)'};" onclick="setTopSeason('summer')">☀️ 夏</button>
+          </div>
+          <div class="slot-result" id="slotTop">點擊下方抽籤</div>
         </div>
         <div class="slot-box" style="background:var(--mint);">
-          <div class="slot-label">👖 下半身 ${state.ootd.sportMode ? '(運動模式過濾裙裝)' : ''}</div>
-          <div class="slot-result" id="slotBottom">點擊上方抽籤</div>
+          <div class="slot-label" style="display:flex;justify-content:center;align-items:center;gap:6px;">
+            <span>👖 下半身</span>
+            <button class="stamp-btn" style="background:${curBottom==='pants'?'var(--ink)':'var(--white)'};color:${curBottom==='pants'?'var(--white)':'var(--ink)'};" onclick="setBottomType('pants')">👖 褲</button>
+            <button class="stamp-btn" style="background:${curBottom==='skirt'?'var(--ink)':'var(--white)'};color:${curBottom==='skirt'?'var(--white)':'var(--ink)'};" onclick="setBottomType('skirt')">👗 裙</button>
+          </div>
+          <div class="slot-result" id="slotBottom">點擊下方抽籤</div>
         </div>
         ${needOuter ? `
           <div class="slot-box" style="background:var(--lavender);">
             <div class="slot-label">🧥 外搭外套（天氣連動）</div>
-            <div class="slot-result" id="slotOuter">點擊上方抽籤</div>
+            <div class="slot-result" id="slotOuter">點擊下方抽籤</div>
           </div>
         ` : ''}
       `;
 
-      const cols = document.getElementById('wardrobeColumns');
-      cols.innerHTML = [
-        { key: 'tops', title: '👚 上半身衣櫃', bg: 'var(--pink)', hasSkirt: false },
-        { key: 'bottoms', title: '👖 下半身衣櫃', bg: 'var(--mint)', hasSkirt: true },
-        { key: 'outerwear', title: '🧥 外套衣櫃', bg: 'var(--lavender)', hasSkirt: false }
-      ].map(cat => `
-        <div style="background:${cat.bg};border:2.2px solid var(--ink);box-shadow:0 3px 0 var(--ink);border-radius:18px;padding:14px;">
-          <div style="font-weight:900;margin-bottom:8px;">${cat.title}</div>
-          <div style="display:flex;gap:6px;margin-bottom:10px;">
-            <input type="text" id="addCloth_${cat.key}" class="input-pill" placeholder="新增單品..." style="flex:1;padding:6px 10px;" onkeydown="if(event.key==='Enter') addClothItem('${cat.key}')" />
-            <button class="btn btn-dark" style="padding:6px 12px;" onclick="addClothItem('${cat.key}')">＋</button>
-          </div>
-          <div>
-            ${state.ootd[cat.key].map(item => `
-              <div class="cloth-capsule ${item.sleeping ? 'sleeping' : ''}">
-                <input type="text" class="cloth-edit-input" value="${esc(item.text)}" onchange="editClothText('${cat.key}','${item.id}',this.value)" />
-                <div style="display:flex;gap:4px;align-items:center;flex-shrink:0;">
-                  ${cat.hasSkirt ? `<button class="stamp-btn ${item.isSkirt?'has-q':''}" title="標記為裙裝" onclick="toggleClothSkirt('${item.id}')">裙</button>` : ''}
-                  <button class="stamp-btn" style="background:${item.sleeping?'#FFF':'var(--yellow)'};" title="${item.sleeping?'點亮星星加入抽籤':'洗衣服中暫停抽籤'}" onclick="toggleClothSleep('${cat.key}','${item.id}')">${item.sleeping?'☆':'⭐'}</button>
-                  <button style="border:none;background:none;font-weight:900;cursor:pointer;" onclick="deleteClothItem('${cat.key}','${item.id}')">✕</button>
-                </div>
-              </div>
-            `).join('')}
+      const filteredTops = state.ootd.tops.filter(i => (i.season || 'winter') === curSeason);
+      const filteredBottoms = state.ootd.bottoms.filter(i => (i.type || (i.isSkirt ? 'skirt' : 'pants')) === curBottom);
+
+      const renderItems = (catKey, list) => list.map(item => `
+        <div class="cloth-capsule ${item.sleeping ? 'sleeping' : ''}">
+          <input type="text" class="cloth-edit-input" value="${esc(item.text)}" onchange="editClothText('${catKey}','${item.id}',this.value)" />
+          <div style="display:flex;gap:4px;align-items:center;flex-shrink:0;">
+            <button class="stamp-btn" style="background:${item.sleeping?'#FFF':'var(--yellow)'};" title="${item.sleeping?'點亮星星加入抽籤':'洗衣服中暫停抽籤'}" onclick="toggleClothSleep('${catKey}','${item.id}')">${item.sleeping?'☆':'⭐'}</button>
+            <button style="border:none;background:none;font-weight:900;cursor:pointer;" onclick="deleteClothItem('${catKey}','${item.id}')">✕</button>
           </div>
         </div>
       `).join('');
+
+      const cols = document.getElementById('wardrobeColumns');
+      cols.innerHTML = `
+        <div style="background:var(--pink);border:2.2px solid var(--ink);box-shadow:0 3px 0 var(--ink);border-radius:18px;padding:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-weight:900;">👚 上半身衣櫃</span>
+            <div style="display:flex;gap:5px;">
+              <button class="stamp-btn" style="background:${curSeason==='winter'?'var(--ink)':'var(--white)'};color:${curSeason==='winter'?'var(--white)':'var(--ink)'};" onclick="setTopSeason('winter')">冬 (${state.ootd.tops.filter(i=>(i.season||'winter')==='winter').length})</button>
+              <button class="stamp-btn" style="background:${curSeason==='summer'?'var(--ink)':'var(--white)'};color:${curSeason==='summer'?'var(--white)':'var(--ink)'};" onclick="setTopSeason('summer')">夏 (${state.ootd.tops.filter(i=>i.season==='summer').length})</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:10px;">
+            <input type="text" id="addCloth_tops" class="input-pill" placeholder="新增${curSeason==='winter'?'冬裝':'夏裝'}上衣..." style="flex:1;padding:6px 10px;" onkeydown="if(event.key==='Enter') addClothItem('tops')" />
+            <button class="btn btn-dark" style="padding:6px 12px;" onclick="addClothItem('tops')">＋</button>
+          </div>
+          <div class="wardrobe-scroll-list">${renderItems('tops', filteredTops)}</div>
+        </div>
+
+        <div style="background:var(--mint);border:2.2px solid var(--ink);box-shadow:0 3px 0 var(--ink);border-radius:18px;padding:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-weight:900;">👖 下半身衣櫃</span>
+            <div style="display:flex;gap:5px;">
+              <button class="stamp-btn" style="background:${curBottom==='pants'?'var(--ink)':'var(--white)'};color:${curBottom==='pants'?'var(--white)':'var(--ink)'};" onclick="setBottomType('pants')">褲 (${state.ootd.bottoms.filter(i=>(i.type||'pants')==='pants').length})</button>
+              <button class="stamp-btn" style="background:${curBottom==='skirt'?'var(--ink)':'var(--white)'};color:${curBottom==='skirt'?'var(--white)':'var(--ink)'};" onclick="setBottomType('skirt')">裙 (${state.ootd.bottoms.filter(i=>i.type==='skirt').length})</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:10px;">
+            <input type="text" id="addCloth_bottoms" class="input-pill" placeholder="新增${curBottom==='pants'?'褲裝':'裙裝'}..." style="flex:1;padding:6px 10px;" onkeydown="if(event.key==='Enter') addClothItem('bottoms')" />
+            <button class="btn btn-dark" style="padding:6px 12px;" onclick="addClothItem('bottoms')">＋</button>
+          </div>
+          <div class="wardrobe-scroll-list">${renderItems('bottoms', filteredBottoms)}</div>
+        </div>
+
+        <div style="background:var(--lavender);border:2.2px solid var(--ink);box-shadow:0 3px 0 var(--ink);border-radius:18px;padding:14px;">
+          <div style="font-weight:900;margin-bottom:8px;">🧥 外套衣櫃 (${state.ootd.outerwear.length})</div>
+          <div style="display:flex;gap:6px;margin-bottom:10px;">
+            <input type="text" id="addCloth_outerwear" class="input-pill" placeholder="新增外套單品..." style="flex:1;padding:6px 10px;" onkeydown="if(event.key==='Enter') addClothItem('outerwear')" />
+            <button class="btn btn-dark" style="padding:6px 12px;" onclick="addClothItem('outerwear')">＋</button>
+          </div>
+          <div class="wardrobe-scroll-list">${renderItems('outerwear', state.ootd.outerwear)}</div>
+        </div>
+      `;
     }
 
     function spinOOTD() {
-      const tops = state.ootd.tops.filter(i => !i.sleeping);
-      const bottoms = state.ootd.bottoms.filter(i => !i.sleeping && (!state.ootd.sportMode || !i.isSkirt));
+      const curSeason = state.ootd.topSeason || 'winter';
+      const curBottom = state.ootd.bottomType || 'pants';
+      const tops = state.ootd.tops.filter(i => !i.sleeping && (i.season || 'winter') === curSeason);
+      const bottoms = state.ootd.bottoms.filter(i => !i.sleeping && (i.type || (i.isSkirt ? 'skirt' : 'pants')) === curBottom);
       const outers = state.ootd.outerwear.filter(i => !i.sleeping);
 
-      const pick = arr => arr.length ? arr[Math.floor(Math.random() * arr.length)].text : '（衣櫃無可用單品）';
+      const pick = arr => arr.length ? arr[Math.floor(Math.random() * arr.length)].text : '（目前分類無可用單品）';
       let ticks = 0;
       const timer = setInterval(() => {
         document.getElementById('slotTop').textContent = pick(tops);
@@ -2236,7 +2295,8 @@
       if (!text) return;
       state.ootd[catKey].push({
         id: uid(), text,
-        ...(catKey === 'bottoms' ? { isSkirt: text.includes('裙') } : {}),
+        ...(catKey === 'tops' ? { season: state.ootd.topSeason || 'winter' } : {}),
+        ...(catKey === 'bottoms' ? { type: state.ootd.bottomType || 'pants' } : {}),
         sleeping: false
       });
       input.value = '';
@@ -2244,6 +2304,27 @@
       renderOOTD();
     }
 
+    function editClothText(catKey, id, newText) {
+      const item = state.ootd[catKey].find(i => i.id === id);
+      if (item && newText.trim()) {
+        item.text = newText.trim();
+        saveState();
+        showToast('衣物名稱已更新 ✨');
+      }
+    }
+
+    function toggleClothSleep(catKey, id) {
+      const item = state.ootd[catKey].find(i => i.id === id);
+      if (item) item.sleeping = !item.sleeping;
+      saveState();
+      renderOOTD();
+    }
+
+    function deleteClothItem(catKey, id) {
+      state.ootd[catKey] = state.ootd[catKey].filter(i => i.id !== id);
+      saveState();
+      renderOOTD();
+    }
     function editClothText(catKey, id, newText) {
       const item = state.ootd[catKey].find(i => i.id === id);
       if (item && newText.trim()) {
