@@ -745,10 +745,22 @@
       min-height: 42px;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: 
+		    .wardrobe-columns {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+      align-items: start;
     }
 
-     .wardrobe-scroll-list {
+    @media (max-width: 680px) {
+      .wardrobe-columns {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .wardrobe-scroll-list {
       max-height: 380px;
       overflow-y: auto;
       padding-right: 3px;
