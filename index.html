@@ -1469,18 +1469,29 @@
         });
       }
       if (Array.isArray(data.pendingUploads)) merged.pendingUploads = data.pendingUploads;
-      if (data.ootd) {
-        const normItems = (arr, withSkirt = false) => (arr || []).map(item =>
+            if (data.ootd) {
+        const normTops = (arr) => (arr || []).map(item =>
           typeof item === 'string'
-            ? { id: uid(), text: item, ...(withSkirt ? { isSkirt: item.includes('裙') } : {}), sleeping: false }
-            : { id: item.id || uid(), text: item.text || '', ...(withSkirt ? { isSkirt: !!item.isSkirt } : {}), sleeping: !!item.sleeping }
+            ? { id: uid(), text: item, season: 'winter', sleeping: false }
+            : { id: item.id || uid(), text: item.text || '', season: item.season || 'winter', sleeping: !!item.sleeping }
+        );
+        const normBottoms = (arr) => (arr || []).map(item =>
+          typeof item === 'string'
+            ? { id: uid(), text: item, type: item.includes('裙') ? 'skirt' : 'pants', sleeping: false }
+            : { id: item.id || uid(), text: item.text || '', type: item.type || (item.isSkirt ? 'skirt' : 'pants'), sleeping: !!item.sleeping }
+        );
+        const normOuter = (arr) => (arr || []).map(item =>
+          typeof item === 'string'
+            ? { id: uid(), text: item, sleeping: false }
+            : { id: item.id || uid(), text: item.text || '', sleeping: !!item.sleeping }
         );
         merged.ootd = {
           city: data.ootd.city || '25.08,121.47',
-          sportMode: !!data.ootd.sportMode,
-          tops: normItems(data.ootd.tops),
-          bottoms: normItems(data.ootd.bottoms, true),
-          outerwear: data.ootd.outerwear ? normItems(data.ootd.outerwear) : merged.ootd.outerwear
+          topSeason: data.ootd.topSeason || 'winter',
+          bottomType: data.ootd.bottomType || 'pants',
+          tops: normTops(data.ootd.tops),
+          bottoms: normBottoms(data.ootd.bottoms),
+          outerwear: data.ootd.outerwear ? normOuter(data.ootd.outerwear) : merged.ootd.outerwear
         };
       }
       if (data.life) merged.life = { ...merged.life, ...data.life };
