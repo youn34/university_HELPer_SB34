@@ -1479,6 +1479,7 @@
             maxHearts: c.maxHearts || 3,
             filesUrl: c.filesUrl || '',
             pastExamUrl: c.pastExamUrl || '',
+			gradeNote: c.gradeNote || '',
 			moodleUrl: c.moodleUrl || '',
             notebookUrl: c.notebookUrl || '',
             profEmail: c.profEmail || '',
@@ -1883,11 +1884,8 @@
       }
 
       container.innerHTML = state.courses.map(c => {
-        const info = computeCourseGradeSummary(c);
-        const subText = c.schedule
-          ? esc(c.schedule)
-          : (c.days.length ? '週' + c.days.map(d => DAY_NAMES[d]).join('、') : '未設時間教室');
-        let heartsHtml = '';
+      const info = computeCourseGradeSummary(c);
+      let heartsHtml = '';
         for (let i = 0; i < c.maxHearts; i++) {
           heartsHtml += i < c.hearts ? '❤️' : '🤍';
         }
@@ -1922,11 +1920,14 @@
         return `
           <div class="grade-card-v1" style="background:${c.color};">
             <!-- Header -->
-            <div class="grade-v1-header">
-              <div>
-                <h3 class="grade-v1-title">${esc(c.name)}</h3>
-                <div class="grade-v1-sub">${subText}</div>
-              </div>
+           <div class="grade-v1-header">
+            <div style="flex:1;min-width:180px;">
+              <h3 class="grade-v1-title">${esc(c.name)}</h3>
+              <input type="text" value="${esc(c.gradeNote || '')}"
+                placeholder="✏️ 點擊寫調分備註（例：老師說期末開根號乘十！）"
+                onchange="updateGradeNote('${c.id}', this.value)"
+                style="width:100%;margin-top:6px;background:rgba(255,255,255,0.85);border:1.8px solid var(--ink);border-radius:999px;padding:4px 12px;font-family:inherit;font-size:0.8rem;font-weight:800;color:var(--ink);" />
+            </div>
               <div class="white-pill-bar" style="padding:5px 12px;">
                 <span>扣打：</span>
                 <div class="hearts-list" onclick="toggleHeart('${c.id}')">${heartsHtml}</div>
@@ -2006,6 +2007,13 @@
       renderGrades();
       renderCourses();
     }
+	  function updateGradeNote(courseId, text) {
+    const c = state.courses.find(x => x.id === courseId);
+    if (!c) return;
+    c.gradeNote = text.trim();
+    saveState();
+    showToast('調分備註已儲存 ✨');
+  }
 
     /* Exam Prep & Past Exam Collector */
     function addPendingUpload() {
